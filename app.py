@@ -1,5 +1,6 @@
 import streamlit as st
 import random
+import os
 import base64
 
 st.set_page_config(
@@ -11,7 +12,6 @@ st.set_page_config(
 # Custom Styling (Light & Dark Mode compatible + Mobile Responsive)
 st.markdown("""
 <style>
-    /* Responsive Title styling for Light & Dark mode */
     .main-title {
         font-size: 2rem;
         font-weight: 800;
@@ -24,8 +24,6 @@ st.markdown("""
         margin-bottom: 1.5rem;
         opacity: 0.85;
     }
-    
-    /* Bridge Box styling compatible with Light & Dark Mode */
     .bridge-box {
         background-color: rgba(37, 99, 235, 0.12);
         border-left: 5px solid #2563EB;
@@ -39,8 +37,6 @@ st.markdown("""
         margin-bottom: 0.5rem;
         font-weight: 700;
     }
-    
-    /* Mobile-friendly text wrapping & button styling */
     .stRadio label, div[role="radiogroup"] label {
         white-space: normal !important;
         word-break: break-word !important;
@@ -55,8 +51,6 @@ st.markdown("""
     div[data-testid="stMarkdownContainer"] {
         word-break: break-word !important;
     }
-
-    /* AI Card Item Styling */
     .ai-card-box {
         display: flex;
         align-items: center;
@@ -66,12 +60,6 @@ st.markdown("""
         background-color: rgba(128, 128, 128, 0.08);
         border: 1px solid rgba(128, 128, 128, 0.18);
         margin-bottom: 12px;
-    }
-    .ai-card-img {
-        width: 44px;
-        height: 44px;
-        flex-shrink: 0;
-        border-radius: 10px;
     }
     .ai-card-title {
         font-size: 1.1rem;
@@ -86,47 +74,49 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-# Embedded Vector SVG Data URIs (100% reliable, zero network reliance, no broken images)
-def make_svg_uri(svg_code):
-    b64 = base64.b64encode(svg_code.strip().encode('utf-8')).decode('utf-8')
-    return f"data:image/svg+xml;base64,{b64}"
-
-LOGOS = {
-    "Claude": make_svg_uri('''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" rx="22" fill="#CC785C"/><path d="M50 20 L58 42 L80 50 L58 58 L50 80 L42 58 L20 50 L42 42 Z" fill="#FFFFFF"/></svg>'''),
-    "ChatGPT": make_svg_uri('''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" rx="22" fill="#10A37F"/><circle cx="50" cy="50" r="28" stroke="#FFFFFF" stroke-width="8" fill="none"/><path d="M50 22 A28 28 0 0 1 78 50" stroke="#FFFFFF" stroke-width="12" stroke-linecap="round" fill="none"/></svg>'''),
-    "Gemini": make_svg_uri('''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" rx="22" fill="#1B72E8"/><path d="M50 15 C50 35 65 50 85 50 C65 50 50 65 50 85 C50 65 35 50 15 50 C35 50 50 35 50 15 Z" fill="#FFFFFF"/></svg>'''),
-    "Perplexity": make_svg_uri('''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" rx="22" fill="#20B2AA"/><path d="M30 30 L70 30 L70 70 L30 70 Z M50 20 L50 80 M20 50 L80 50" stroke="#FFFFFF" stroke-width="8" stroke-linecap="round" fill="none"/></svg>'''),
-    "Canva": make_svg_uri('''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" rx="22" fill="#00C4CC"/><text x="50" y="66" font-family="sans-serif" font-weight="900" font-size="48" fill="#FFFFFF" text-anchor="middle">C</text></svg>'''),
-    "NotebookLM": make_svg_uri('''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" rx="22" fill="#4285F4"/><rect x="25" y="20" width="50" height="60" rx="6" fill="#FFFFFF"/><line x1="35" y1="35" x2="65" y2="35" stroke="#4285F4" stroke-width="6" stroke-linecap="round"/><line x1="35" y1="48" x2="65" y2="48" stroke="#4285F4" stroke-width="6" stroke-linecap="round"/><line x1="35" y1="61" x2="55" y2="61" stroke="#4285F4" stroke-width="6" stroke-linecap="round"/></svg>'''),
-    "Liner": make_svg_uri('''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" rx="22" fill="#FFC107"/><path d="M25 65 L60 30 L75 45 L40 80 Z M65 25 L75 35" stroke="#212529" stroke-width="7" fill="none" stroke-linejoin="round"/></svg>'''),
-    "QANDA": make_svg_uri('''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" rx="22" fill="#FF6B00"/><text x="50" y="65" font-family="sans-serif" font-weight="900" font-size="42" fill="#FFFFFF" text-anchor="middle">Q</text></svg>'''),
-    "Gamma": make_svg_uri('''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" rx="22" fill="#8A2BE2"/><path d="M50 20 L56 38 L74 44 L56 50 L50 68 L44 50 L26 44 L44 38 Z M70 65 L73 75 L83 78 L73 81 L70 91 L67 81 L57 78 L67 75 Z" fill="#FFFFFF"/></svg>'''),
-    "ThetaWaveAI": make_svg_uri('''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" rx="22" fill="#6366F1"/><path d="M20 50 Q35 20 50 50 T80 50" stroke="#FFFFFF" stroke-width="8" fill="none" stroke-linecap="round"/></svg>'''),
-    "UnivAI": make_svg_uri('''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" rx="22" fill="#2563EB"/><path d="M50 25 L85 40 L50 55 L15 40 Z M85 40 L85 65 M30 50 L30 70 Q50 82 70 70 L70 50" stroke="#FFFFFF" stroke-width="6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>''')
+# ---------------------------------------------------------
+# KakaoTalk Image Mapping & Renderer
+# ---------------------------------------------------------
+IMAGE_FILES = {
+    "Gemini": "KakaoTalk_20261007_220156149_01.png",
+    "ChatGPT": "KakaoTalk_20261007_220156149_02.png",
+    "Claude": "KakaoTalk_20261007_220156149_03.png",
+    "Canva": "KakaoTalk_20261007_220156149_04.png",
+    "NotebookLM": "KakaoTalk_20261007_220156149_05.png",
+    "QANDA": "KakaoTalk_20261007_220156149_06.png",
+    "Gamma": "KakaoTalk_20261007_220156149_07.png",
+    "Liner": "KakaoTalk_20261007_220156149_08.png",
+    "UnivAI": "KakaoTalk_20261007_220156149_09.png",
+    "ThetaWaveAI": "KakaoTalk_20261007_220156149_10.png",
+    "Perplexity": "KakaoTalk_20261007_220156149.png"
 }
 
-def render_ai_card(name, logo_key, description):
-    logo_src = LOGOS.get(logo_key, "")
-    html = f'<div class="ai-card-box"><img src="{logo_src}" class="ai-card-img" alt="{name}"><div><div class="ai-card-title">{name}</div><div class="ai-card-desc">{description}</div></div></div>'
-    st.markdown(html, unsafe_allow_html=True)
+def render_ai_card(name, key, description):
+    filename = IMAGE_FILES.get(key, "")
+    col_img, col_txt = st.columns([1, 6])
+    
+    with col_img:
+        if filename and os.path.exists(filename):
+            st.image(filename, width=50)
+        else:
+            # Fallback icon if file is not uploaded yet
+            st.markdown(f"### 🤖")
+            
+    with col_txt:
+        st.markdown(f"**{name}**\n\n{description}")
+    st.divider()
 
 # ---------------------------------------------------------
-# State Management & Progress Calculation (Top of Script)
+# State Management & Progress Calculation
 # ---------------------------------------------------------
 if 'solved_cases_count' not in st.session_state:
     st.session_state.solved_cases_count = 0
 
 completed = []
-
-# Stage 1: solved at least once
 if st.session_state.get('stage1_done', False) or st.session_state.solved_cases_count > 0:
     completed.append(1)
-
-# Stage 2: user selected a task type
 if st.session_state.get('task_type_select', '선택하세요') != '선택하세요':
     completed.append(2)
-
-# Stage 3: user checked all 3 checkboxes
 if (st.session_state.get('chk1', False) and 
     st.session_state.get('chk2', False) and 
     st.session_state.get('chk3', False)):
@@ -192,7 +182,6 @@ def generate_infinite_case():
         ana, ana_fact = str(selected_ana), "2000년대 기술"
 
     subj = str(random.choice(subjects))
-    
     ana_fact_word = ana_fact.split()[0] if isinstance(ana_fact, str) and ana_fact.split() else str(ana_fact)
 
     claim = f"{fig_era} {fig}({fig_fact})은 {subj} 중 효율성을 높이기 위해 {ana}했다."
