@@ -125,18 +125,26 @@ subjects = [
 
 def generate_infinite_case():
     selected_fig = random.choice(figures)
-    fig = selected_fig if len(selected_fig) > 0 else "세종대왕"
-    fig_fact = selected_fig if len(selected_fig) > 1 else "역사적 사건"
-    fig_era = selected_fig if len(selected_fig) > 2 else "조선시대"
-    
+    if isinstance(selected_fig, (tuple, list)):
+        fig = str(selected_fig[0]) if len(selected_fig) > 0 else "세종대왕"
+        fig_fact = str(selected_fig[1]) if len(selected_fig) > 1 else "역사적 사건"
+        fig_era = str(selected_fig[2]) if len(selected_fig) > 2 else "조선시대"
+    else:
+        fig, fig_fact, fig_era = str(selected_fig), "역사적 사건", "조선시대"
+
     selected_ana = random.choice(anachronisms)
-    ana = selected_ana if len(selected_ana) > 0 else "스마트폰 사용"
-    ana_fact = selected_ana if len(selected_ana) > 1 else "2000년대 기술"
+    if isinstance(selected_ana, (tuple, list)):
+        ana = str(selected_ana[0]) if len(selected_ana) > 0 else "스마트폰 사용"
+        ana_fact = str(selected_ana[1]) if len(selected_ana) > 1 else "2000년대 기술"
+    else:
+        ana, ana_fact = str(selected_ana), "2000년대 기술"
+
+    subj = str(random.choice(subjects))
     
-    subj = random.choice(subjects)
-    
+    ana_fact_word = ana_fact.split()[0] if isinstance(ana_fact, str) and ana_fact.split() else str(ana_fact)
+
     claim = f"{fig_era} {fig}({fig_fact})은 {subj} 중 효율성을 높이기 위해 {ana}했다."
-    hint = f"팩트체크 힌트: 포털에 [{fig} 활동 시기]와 [{ana_fact.split() if ana_fact.split() else ana_fact} 시기]를 각각 검색해 연도를 대조해 보세요!"
+    hint = f"팩트체크 힌트: 포털에 [{fig} 활동 시기]와 [{ana_fact_word} 시기]를 각각 검색해 연도를 대조해 보세요!"
     explanation = f"거짓 적발 성공!\n{fig}의 활동 시기와 {ana_fact}의 연도는 서로 맞지 않습니다. 이처럼 AI는 연도와 문맥을 조합해 그럴듯한 거짓 정보를 만듭니다."
     
     return {
@@ -236,7 +244,7 @@ with tab2:
         st.markdown("### 🏆 추천 AI 도구 목록")
         
         # Perplexity
-        col_img, col_txt = st.columns([1, 2])
+        col_img, col_txt = st.columns([1, 10])
         with col_img:
             st.image(LOGOS["Perplexity"], width=45)
         with col_txt:
@@ -244,7 +252,7 @@ with tab2:
         st.divider()
         
         # Gemini
-        col_img, col_txt = st.columns([1, 2])
+        col_img, col_txt = st.columns([1, 10])
         with col_img:
             st.image(LOGOS["Gemini"], width=45)
         with col_txt:
@@ -252,7 +260,7 @@ with tab2:
         st.divider()
 
         # Liner
-        col_img, col_txt = st.columns([1, 2])
+        col_img, col_txt = st.columns([1, 10])
         with col_img:
             st.image(LOGOS["Liner"], width=45)
         with col_txt:
@@ -262,7 +270,7 @@ with tab2:
         st.markdown("### 🏆 추천 AI 도구 목록")
         
         # Claude
-        col_img, col_txt = st.columns([1, 2])
+        col_img, col_txt = st.columns([1, 10])
         with col_img:
             st.image(LOGOS["Claude"], width=45)
         with col_txt:
@@ -270,7 +278,7 @@ with tab2:
         st.divider()
 
         # ChatGPT
-        col_img, col_txt = st.columns([1, 2])
+        col_img, col_txt = st.columns([1, 10])
         with col_img:
             st.image(LOGOS["ChatGPT"], width=45)
         with col_txt:
@@ -278,7 +286,7 @@ with tab2:
         st.divider()
 
         # NotebookLM
-        col_img, col_txt = st.columns([1, 2])
+        col_img, col_txt = st.columns([1, 10])
         with col_img:
             st.image(LOGOS["NotebookLM"], width=45)
         with col_txt:
@@ -286,7 +294,7 @@ with tab2:
         st.divider()
 
         # QANDA
-        col_img, col_txt = st.columns([1, 2])
+        col_img, col_txt = st.columns([1, 10])
         with col_img:
             st.image(LOGOS["QANDA"], width=45)
         with col_txt:
@@ -296,7 +304,7 @@ with tab2:
         st.markdown("### 🏆 추천 AI 도구 목록")
         
         # Canva
-        col_img, col_txt = st.columns([1, 2])
+        col_img, col_txt = st.columns([1, 10])
         with col_img:
             st.image(LOGOS["Canva"], width=45)
         with col_txt:
@@ -304,7 +312,7 @@ with tab2:
         st.divider()
 
         # Gamma
-        col_img, col_txt = st.columns([1, 2])
+        col_img, col_txt = st.columns([1, 10])
         with col_img:
             st.image(LOGOS["Gamma"], width=45)
         with col_txt:
