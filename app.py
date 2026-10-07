@@ -211,7 +211,7 @@ with tab1:
             st.error("다시 검증해 보세요! 힌트를 참고하여 두 연도가 일치하는지 확인해 보세요.")
 
 # ---------------------------------------------------------
-# 2단계: 과제별 AI 선택 (Logos & Expanded Categories)
+# 2단계: 과제별 AI 선택 (Logos & Detailed Roles)
 # ---------------------------------------------------------
 LOGOS = {
     "Claude": "https://upload.wikimedia.org/wikipedia/commons/7/70/Claude_AI_logo.svg",
@@ -222,7 +222,9 @@ LOGOS = {
     "NotebookLM": "https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg",
     "QANDA": "https://qanda.ai/favicon.ico",
     "Gamma": "https://gamma.app/favicon.ico",
-    "Liner": "https://getliner.com/favicon.ico"
+    "Liner": "https://getliner.com/favicon.ico",
+    "ThetaWaveAI": "https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg",
+    "UnivAI": "https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg"
 }
 
 with tab2:
@@ -233,10 +235,11 @@ with tab2:
         "내가 진행하려는 과제 성격은 무엇인가요?",
         [
             "선택하세요",
-            "🔍 최신 정보, 뉴스, 논문 출처와 팩트 검증이 핵심인 과제",
+            "🔍 최신 정보, 뉴스, 논문 출처 조사 및 보고서 내용 검토 과제",
+            "📚 학습 자료 정리, 내용 이해 및 AI 퀴즈/시험 대비 생성 과제",
             "✍️ 긴 글 분석, 보고서 작문, 독후감 및 논술 과제",
             "📐 수학 문제 풀이, 교과 개념 이해 및 오답 노트 과제",
-            "🎨 발표용 슬라이드(PPT), 카드뉴스, 인포그래픽 시각화 작업",
+            "🎨 발표용 슬라이드(PPT), 문서 제작, 카드뉴스 및 인포그래픽 작업",
             "🌐 영어/외국어 독해, 회화, 영작문 및 번역 과제",
             "💻 코딩, 프로그래밍, 알고리즘 및 정보 교과 실습 과제"
         ],
@@ -247,33 +250,59 @@ with tab2:
         st.markdown("### 🏆 추천 AI 도구 목록")
         
         # Perplexity
-        col_img, col_txt = st.columns([1, 10])
+        col_img, col_txt = st.columns([1, 11])
         with col_img:
             st.image(LOGOS["Perplexity"], width=45)
         with col_txt:
             st.markdown("**Perplexity (퍼플렉시티)**\n- 실시간 웹 검색 연동 및 문장마다 출처(URL)를 직접 달아주어 팩트체크 수고를 90% 줄여줍니다.")
         st.divider()
+
+        # Liner AI
+        col_img, col_txt = st.columns([1, 11])
+        with col_img:
+            st.image(LOGOS["Liner"], width=45)
+        with col_txt:
+            st.markdown("**Liner AI (라이너)**\n- 전문 자료 조사와 학술·웹 출처 검증, 완성된 보고서/자료의 정밀 내용 검토에 특화되어 있습니다.")
+        st.divider()
         
         # Gemini
-        col_img, col_txt = st.columns([1, 10])
+        col_img, col_txt = st.columns([1, 11])
         with col_img:
             st.image(LOGOS["Gemini"], width=45)
         with col_txt:
             st.markdown("**Google Gemini (제미나이)**\n- 구글 검색 생태계와 결합하여 최신 정보 탐색 및 이미지/문서 분석에 우수합니다.")
+
+    elif "📚" in task_type:
+        st.markdown("### 🏆 추천 AI 도구 목록")
+        
+        # NotebookLM
+        col_img, col_txt = st.columns([1, 11])
+        with col_img:
+            st.image(LOGOS["NotebookLM"], width=45)
+        with col_txt:
+            st.markdown("**NotebookLM (노트북LM)**\n- 내 교과서, 프린트, PDF 자료를 업로드하면 깊이 있는 내용 이해, 마인드맵/시각화 자료 및 오디오 가이드를 제공합니다.")
         st.divider()
 
-        # Liner
-        col_img, col_txt = st.columns([1, 10])
+        # ThetaWaveAI
+        col_img, col_txt = st.columns([1, 11])
         with col_img:
-            st.image(LOGOS["Liner"], width=45)
+            st.image(LOGOS["ThetaWaveAI"], width=45)
         with col_txt:
-            st.markdown("**Liner (라이너)**\n- 신뢰성 높은 학술 자료와 웹 정보를 하이라이팅하며 정확하게 탐색해 줍니다.")
+            st.markdown("**ThetaWaveAI (세타웨이브 AI)**\n- 긴 학습 자료를 한눈에 들어오게 요약·정리하고, 시험 대비용 맞춤형 AI 퀴즈를 자동으로 생성해 줍니다.")
+        st.divider()
+
+        # UnivAI
+        col_img, col_txt = st.columns([1, 11])
+        with col_img:
+            st.image(LOGOS["UnivAI"], width=45)
+        with col_txt:
+            st.markdown("**Univ AI (유니브 AI)**\n- 교과 및 학술 자료의 체계적 정리와 복습용 실전 퀴즈 생성으로 자기주도 학습을 돕습니다.")
 
     elif "✍️" in task_type:
         st.markdown("### 🏆 추천 AI 도구 목록")
         
         # Claude
-        col_img, col_txt = st.columns([1, 10])
+        col_img, col_txt = st.columns([1, 11])
         with col_img:
             st.image(LOGOS["Claude"], width=45)
         with col_txt:
@@ -281,69 +310,61 @@ with tab2:
         st.divider()
 
         # ChatGPT
-        col_img, col_txt = st.columns([1, 10])
+        col_img, col_txt = st.columns([1, 11])
         with col_img:
             st.image(LOGOS["ChatGPT"], width=45)
         with col_txt:
             st.markdown("**ChatGPT (챗GPT)**\n- 개념 요약, 아이디어 발상, 독후감 개요 작성 등 만능으로 활용하기 좋은 대표 AI입니다.")
-        st.divider()
-
-        # NotebookLM
-        col_img, col_txt = st.columns([1, 10])
-        with col_img:
-            st.image(LOGOS["NotebookLM"], width=45)
-        with col_txt:
-            st.markdown("**NotebookLM (노트북LM)**\n- 내 교과서나 PDF 자료만 업로드하면 거짓말 없이 정확하게 가르쳐주는 나만의 맞춤형 학습 조교입니다.")
 
     elif "📐" in task_type:
         st.markdown("### 🏆 추천 AI 도구 목록")
         
         # QANDA
-        col_img, col_txt = st.columns([1, 10])
+        col_img, col_txt = st.columns([1, 11])
         with col_img:
             st.image(LOGOS["QANDA"], width=45)
         with col_txt:
-            st.markdown("**QANDA (콴다)**\n- 수학 문제 사진 촬영 후 풀이 과정 확인, 오답 원인 분석 및 유사 문제 추천에 특화된 학습 도구입니다.")
+            st.markdown("**QANDA (콴다)**\n- 수학 문제 풀이 과정 해설, 오답 원인 분석 및 단계별 문제 해결에 독보적인 수학 전문 AI입니다.")
         st.divider()
 
         # ChatGPT
-        col_img, col_txt = st.columns([1, 10])
+        col_img, col_txt = st.columns([1, 11])
         with col_img:
             st.image(LOGOS["ChatGPT"], width=45)
         with col_txt:
-            st.markdown("**ChatGPT (챗GPT)**\n- 수학 공식의 원리와 단계별 풀이 과정을 친절하게 해설해 주는 만능 선생님 역할을 합니다.")
-        st.divider()
-
-        # NotebookLM
-        col_img, col_txt = st.columns([1, 10])
-        with col_img:
-            st.image(LOGOS["NotebookLM"], width=45)
-        with col_txt:
-            st.markdown("**NotebookLM (노트북LM)**\n- 학교 수학 학습지나 프린트 PDF를 올리면 내 교재 기반의 개념 요약과 오답 분석을 제공합니다.")
+            st.markdown("**ChatGPT (챗GPT)**\n- 수학 공식의 원리와 논리적 풀이 절차를 친절하게 해설해 주는 학습 파트너입니다.")
 
     elif "🎨" in task_type:
         st.markdown("### 🏆 추천 AI 도구 목록")
         
-        # Canva
-        col_img, col_txt = st.columns([1, 10])
-        with col_img:
-            st.image(LOGOS["Canva"], width=45)
-        with col_txt:
-            st.markdown("**Canva AI (캔바)**\n- 발표용 카드뉴스, 인포그래픽, 포스터 시각화 디자인 템플릿을 자동으로 완성해 줍니다.")
-        st.divider()
-
         # Gamma
-        col_img, col_txt = st.columns([1, 10])
+        col_img, col_txt = st.columns([1, 11])
         with col_img:
             st.image(LOGOS["Gamma"], width=45)
         with col_txt:
-            st.markdown("**Gamma (감마)**\n- 한 줄 프롬프트만 입력하면 멋진 발표용 슬라이드(PPT)를 단 1분 만에 자동으로 제작해 줍니다.")
+            st.markdown("**Gamma (감마)**\n- 한 줄 프롬프트나 아이디어만 입력하면 발표용 PPT 슬라이드와 전용 웹 문서를 1분 만에 디자인해 줍니다.")
+        st.divider()
+
+        # Canva
+        col_img, col_txt = st.columns([1, 11])
+        with col_img:
+            st.image(LOGOS["Canva"], width=45)
+        with col_txt:
+            st.markdown("**Canva AI (캔바)**\n- 카드뉴스, 인포그래픽, 포스터 시각화 디자인 템플릿을 자동으로 완성해 줍니다.")
+        st.divider()
+
+        # NotebookLM
+        col_img, col_txt = st.columns([1, 11])
+        with col_img:
+            st.image(LOGOS["NotebookLM"], width=45)
+        with col_txt:
+            st.markdown("**NotebookLM (노트북LM)**\n- 내 학습 자료를 기반으로 인포그래픽 개요와 시각화 자료 구상을 구체화해 줍니다.")
 
     elif "🌐" in task_type:
         st.markdown("### 🏆 추천 AI 도구 목록")
         
         # Claude
-        col_img, col_txt = st.columns([1, 10])
+        col_img, col_txt = st.columns([1, 11])
         with col_img:
             st.image(LOGOS["Claude"], width=45)
         with col_txt:
@@ -351,25 +372,17 @@ with tab2:
         st.divider()
 
         # ChatGPT
-        col_img, col_txt = st.columns([1, 10])
+        col_img, col_txt = st.columns([1, 11])
         with col_img:
             st.image(LOGOS["ChatGPT"], width=45)
         with col_txt:
             st.markdown("**ChatGPT (챗GPT)**\n- 영어 회화 롤플레잉 연습, 문법 오류 수정, 어휘 설명에 우수한 외국어 학습 파트너입니다.")
-        st.divider()
-
-        # Gemini
-        col_img, col_txt = st.columns([1, 10])
-        with col_img:
-            st.image(LOGOS["Gemini"], width=45)
-        with col_txt:
-            st.markdown("**Google Gemini (제미나이)**\n- 다국어 번역 및 문화적 맥락을 고려한 외국어 자료 해석에 우수합니다.")
 
     elif "💻" in task_type:
         st.markdown("### 🏆 추천 AI 도구 목록")
         
         # Claude
-        col_img, col_txt = st.columns([1, 10])
+        col_img, col_txt = st.columns([1, 11])
         with col_img:
             st.image(LOGOS["Claude"], width=45)
         with col_txt:
@@ -377,7 +390,7 @@ with tab2:
         st.divider()
 
         # ChatGPT
-        col_img, col_txt = st.columns([1, 10])
+        col_img, col_txt = st.columns([1, 11])
         with col_img:
             st.image(LOGOS["ChatGPT"], width=45)
         with col_txt:
