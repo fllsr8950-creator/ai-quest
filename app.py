@@ -54,8 +54,51 @@ st.markdown("""
     div[data-testid="stMarkdownContainer"] {
         word-break: break-word !important;
     }
+
+    /* AI Card Item Styling */
+    .ai-card {
+        display: flex;
+        align-items: flex-start;
+        gap: 14px;
+        padding: 12px 14px;
+        border-radius: 10px;
+        background-color: rgba(128, 128, 128, 0.06);
+        border: 1px solid rgba(128, 128, 128, 0.15);
+        margin-bottom: 12px;
+    }
+    .ai-card-img {
+        width: 42px;
+        height: 42px;
+        object-fit: contain;
+        flex-shrink: 0;
+        border-radius: 8px;
+    }
+    .ai-card-title {
+        font-size: 1.1rem;
+        font-weight: 700;
+        margin-bottom: 4px;
+    }
+    .ai-card-desc {
+        font-size: 0.95rem;
+        line-height: 1.5;
+        opacity: 0.9;
+    }
 </style>
 """, unsafe_allow_html=True)
+
+# Helper function to render AI Cards robustly
+def render_ai_card(name, emoji, logo_url, description):
+    img_html = f'<img src="{logo_url}" class="ai-card-img" onerror="this.style.display=\'none\'" alt="{name}">' if logo_url else ''
+    card_html = f"""
+    <div class="ai-card">
+        {img_html}
+        <div>
+            <div class="ai-card-title">{emoji} {name}</div>
+            <div class="ai-card-desc">{description}</div>
+        </div>
+    </div>
+    """
+    st.markdown(card_html, unsafe_allow_html=True)
 
 # ---------------------------------------------------------
 # State Management & Progress Calculation (Top of Script)
@@ -211,20 +254,14 @@ with tab1:
             st.error("다시 검증해 보세요! 힌트를 참고하여 두 연도가 일치하는지 확인해 보세요.")
 
 # ---------------------------------------------------------
-# 2단계: 과제별 AI 선택 (Distinct & High Quality Icons)
+# 2단계: 과제별 AI 선택 (PNG Thumbnails + Fail-safe HTML Cards)
 # ---------------------------------------------------------
 LOGOS = {
-    "Claude": "https://upload.wikimedia.org/wikipedia/commons/7/70/Claude_AI_logo.svg",
-    "ChatGPT": "https://upload.wikimedia.org/wikipedia/commons/0/04/ChatGPT_logo.svg",
-    "Gemini": "https://upload.wikimedia.org/wikipedia/commons/8/8a/Google_Gemini_logo.svg",
-    "Perplexity": "https://upload.wikimedia.org/wikipedia/commons/1/1d/Perplexity_AI_logo.svg",
-    "Canva": "https://upload.wikimedia.org/wikipedia/commons/0/08/Canva_icon_2021.svg",
-    "NotebookLM": "https://api.iconify.design/fluent-emoji-flat:notebook-with-decorative-cover.svg",
-    "QANDA": "https://api.iconify.design/fluent-emoji-flat:keycap-1234.svg",
-    "Gamma": "https://api.iconify.design/fluent-emoji-flat:sparkles.svg",
-    "Liner": "https://api.iconify.design/fluent-emoji-flat:highlighter.svg",
-    "ThetaWaveAI": "https://api.iconify.design/fluent-emoji-flat:brain.svg",
-    "UnivAI": "https://api.iconify.design/fluent-emoji-flat:graduation-cap.svg"
+    "Claude": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/70/Claude_AI_logo.svg/200px-Claude_AI_logo.svg.png",
+    "ChatGPT": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/04/ChatGPT_logo.svg/200px-ChatGPT_logo.svg.png",
+    "Gemini": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8a/Google_Gemini_logo.svg/200px-Google_Gemini_logo.svg.png",
+    "Perplexity": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1d/Perplexity_AI_logo.svg/200px-Perplexity_AI_logo.svg.png",
+    "Canva": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/08/Canva_icon_2021.svg/200px-Canva_icon_2021.svg.png"
 }
 
 with tab2:
@@ -248,153 +285,41 @@ with tab2:
     
     if "🔍" in task_type:
         st.markdown("### 🏆 추천 AI 도구 목록")
-        
-        # Perplexity
-        col_img, col_txt = st.columns([1, 12])
-        with col_img:
-            st.image(LOGOS["Perplexity"], width=45)
-        with col_txt:
-            st.markdown("**Perplexity (퍼플렉시티)**\n- 실시간 웹 검색 연동 및 문장마다 출처(URL)를 직접 달아주어 팩트체크 수고를 90% 줄여줍니다.")
-        st.divider()
-
-        # Liner AI
-        col_img, col_txt = st.columns([1, 12])
-        with col_img:
-            st.image(LOGOS["Liner"], width=45)
-        with col_txt:
-            st.markdown("**Liner AI (라이너)**\n- 전문 자료 조사와 학술·웹 출처 검증, 완성된 보고서/자료의 정밀 내용 검토에 특화되어 있습니다.")
-        st.divider()
-        
-        # Gemini
-        col_img, col_txt = st.columns([1, 12])
-        with col_img:
-            st.image(LOGOS["Gemini"], width=45)
-        with col_txt:
-            st.markdown("**Google Gemini (제미나이)**\n- 구글 검색 생태계와 결합하여 최신 정보 탐색 및 이미지/문서 분석에 우수합니다.")
+        render_ai_card("Perplexity (퍼플렉시티)", "🌐", LOGOS["Perplexity"], "실시간 웹 검색 연동 및 문장마다 출처(URL)를 직접 달아주어 팩트체크 수고를 90% 줄여줍니다.")
+        render_ai_card("Liner AI (라이너)", "🖍️", "", "전문 자료 조사와 학술·웹 출처 검증, 완성된 보고서/자료의 정밀 내용 검토에 특화되어 있습니다.")
+        render_ai_card("Google Gemini (제미나이)", "🔵", LOGOS["Gemini"], "구글 검색 생태계와 결합하여 최신 정보 탐색 및 이미지/문서 분석에 우수합니다.")
 
     elif "📚" in task_type:
         st.markdown("### 🏆 추천 AI 도구 목록")
-        
-        # NotebookLM
-        col_img, col_txt = st.columns([1, 12])
-        with col_img:
-            st.image(LOGOS["NotebookLM"], width=45)
-        with col_txt:
-            st.markdown("**NotebookLM (노트북LM)**\n- 내 교과서, 프린트, PDF 자료를 업로드하면 깊이 있는 내용 이해, 마인드맵/시각화 자료 및 오디오 가이드를 제공합니다.")
-        st.divider()
-
-        # ThetaWaveAI
-        col_img, col_txt = st.columns([1, 12])
-        with col_img:
-            st.image(LOGOS["ThetaWaveAI"], width=45)
-        with col_txt:
-            st.markdown("**ThetaWaveAI (세타웨이브 AI)**\n- 긴 학습 자료를 한눈에 들어오게 요약·정리하고, 시험 대비용 맞춤형 AI 퀴즈를 자동으로 생성해 줍니다.")
-        st.divider()
-
-        # UnivAI
-        col_img, col_txt = st.columns([1, 12])
-        with col_img:
-            st.image(LOGOS["UnivAI"], width=45)
-        with col_txt:
-            st.markdown("**Univ AI (유니브 AI)**\n- 교과 및 학술 자료의 체계적 정리와 복습용 실전 퀴즈 생성으로 자기주도 학습을 돕습니다.")
+        render_ai_card("NotebookLM (노트북LM)", "📘", "", "내 교과서, 프린트, PDF 자료를 업로드하면 깊이 있는 내용 이해, 마인드맵/시각화 자료 및 오디오 가이드를 제공합니다.")
+        render_ai_card("ThetaWaveAI (세타웨이브 AI)", "🧠", "", "긴 학습 자료를 한눈에 들어오게 요약·정리하고, 시험 대비용 맞춤형 AI 퀴즈를 자동으로 생성해 줍니다.")
+        render_ai_card("Univ AI (유니브 AI)", "🎓", "", "교과 및 학술 자료의 체계적 정리와 복습용 실전 퀴즈 생성으로 자기주도 학습을 돕습니다.")
 
     elif "✍️" in task_type:
         st.markdown("### 🏆 추천 AI 도구 목록")
-        
-        # Claude
-        col_img, col_txt = st.columns([1, 12])
-        with col_img:
-            st.image(LOGOS["Claude"], width=45)
-        with col_txt:
-            st.markdown("**Claude (클로드)**\n- 방대한 분량의 긴 글과 논문 분석, 자연스러운 보고서 작문 및 논리적 텍스트 생성에 가장 탁월합니다.")
-        st.divider()
-
-        # ChatGPT
-        col_img, col_txt = st.columns([1, 12])
-        with col_img:
-            st.image(LOGOS["ChatGPT"], width=45)
-        with col_txt:
-            st.markdown("**ChatGPT (챗GPT)**\n- 개념 요약, 아이디어 발상, 독후감 개요 작성 등 만능으로 활용하기 좋은 대표 AI입니다.")
+        render_ai_card("Claude (클로드)", "🟠", LOGOS["Claude"], "방대한 분량의 긴 글과 논문 분석, 자연스러운 보고서 작문 및 논리적 텍스트 생성에 가장 탁월합니다.")
+        render_ai_card("ChatGPT (챗GPT)", "🟢", LOGOS["ChatGPT"], "개념 요약, 아이디어 발상, 독후감 개요 작성 등 만능으로 활용하기 좋은 대표 AI입니다.")
 
     elif "📐" in task_type:
         st.markdown("### 🏆 추천 AI 도구 목록")
-        
-        # QANDA
-        col_img, col_txt = st.columns([1, 12])
-        with col_img:
-            st.image(LOGOS["QANDA"], width=45)
-        with col_txt:
-            st.markdown("**QANDA (콴다)**\n- 수학 문제 풀이 과정 해설, 오답 원인 분석 및 단계별 문제 해결에 독보적인 수학 전문 AI입니다.")
-        st.divider()
-
-        # ChatGPT
-        col_img, col_txt = st.columns([1, 12])
-        with col_img:
-            st.image(LOGOS["ChatGPT"], width=45)
-        with col_txt:
-            st.markdown("**ChatGPT (챗GPT)**\n- 수학 공식의 원리와 논리적 풀이 절차를 친절하게 해설해 주는 학습 파트너입니다.")
+        render_ai_card("QANDA (콴다)", "🔢", "", "수학 문제 풀이 과정 해설, 오답 원인 분석 및 단계별 문제 해결에 독보적인 수학 전문 AI입니다.")
+        render_ai_card("ChatGPT (챗GPT)", "🟢", LOGOS["ChatGPT"], "수학 공식의 원리와 논리적 풀이 절차를 친절하게 해설해 주는 학습 파트너입니다.")
 
     elif "🎨" in task_type:
         st.markdown("### 🏆 추천 AI 도구 목록")
-        
-        # Gamma
-        col_img, col_txt = st.columns([1, 12])
-        with col_img:
-            st.image(LOGOS["Gamma"], width=45)
-        with col_txt:
-            st.markdown("**Gamma (감마)**\n- 한 줄 프롬프트나 아이디어만 입력하면 발표용 PPT 슬라이드와 전용 웹 문서를 1분 만에 디자인해 줍니다.")
-        st.divider()
-
-        # Canva
-        col_img, col_txt = st.columns([1, 12])
-        with col_img:
-            st.image(LOGOS["Canva"], width=45)
-        with col_txt:
-            st.markdown("**Canva AI (캔바)**\n- 카드뉴스, 인포그래픽, 포스터 시각화 디자인 템플릿을 자동으로 완성해 줍니다.")
-        st.divider()
-
-        # NotebookLM
-        col_img, col_txt = st.columns([1, 12])
-        with col_img:
-            st.image(LOGOS["NotebookLM"], width=45)
-        with col_txt:
-            st.markdown("**NotebookLM (노트북LM)**\n- 내 학습 자료를 기반으로 인포그래픽 개요와 시각화 자료 구상을 구체화해 줍니다.")
+        render_ai_card("Gamma (감마)", "✨", "", "한 줄 프롬프트나 아이디어만 입력하면 발표용 PPT 슬라이드와 전용 웹 문서를 1분 만에 디자인해 줍니다.")
+        render_ai_card("Canva AI (캔바)", "🎨", LOGOS["Canva"], "카드뉴스, 인포그래픽, 포스터 시각화 디자인 템플릿을 자동으로 완성해 줍니다.")
+        render_ai_card("NotebookLM (노트북LM)", "📘", "", "내 학습 자료를 기반으로 인포그래픽 개요와 시각화 자료 구상을 구체화해 줍니다.")
 
     elif "🌐" in task_type:
         st.markdown("### 🏆 추천 AI 도구 목록")
-        
-        # Claude
-        col_img, col_txt = st.columns([1, 12])
-        with col_img:
-            st.image(LOGOS["Claude"], width=45)
-        with col_txt:
-            st.markdown("**Claude (클로드)**\n- 가장 원어민스럽고 자연스러운 뉘앙스의 영작문 교정 및 긴 원서 독해 해설을 제공합니다.")
-        st.divider()
-
-        # ChatGPT
-        col_img, col_txt = st.columns([1, 12])
-        with col_img:
-            st.image(LOGOS["ChatGPT"], width=45)
-        with col_txt:
-            st.markdown("**ChatGPT (챗GPT)**\n- 영어 회화 롤플레잉 연습, 문법 오류 수정, 어휘 설명에 우수한 외국어 학습 파트너입니다.")
+        render_ai_card("Claude (클로드)", "🟠", LOGOS["Claude"], "가장 원어민스럽고 자연스러운 뉘앙스의 영작문 교정 및 긴 원서 독해 해설을 제공합니다.")
+        render_ai_card("ChatGPT (챗GPT)", "🟢", LOGOS["ChatGPT"], "영어 회화 롤플레잉 연습, 문법 오류 수정, 어휘 설명에 우수한 외국어 학습 파트너입니다.")
 
     elif "💻" in task_type:
         st.markdown("### 🏆 추천 AI 도구 목록")
-        
-        # Claude
-        col_img, col_txt = st.columns([1, 12])
-        with col_img:
-            st.image(LOGOS["Claude"], width=45)
-        with col_txt:
-            st.markdown("**Claude (클로드)**\n- 복잡한 코드 오류(디버깅) 원인을 친절하게 설명하고 깔끔한 알고리즘 코드를 작성해 줍니다.")
-        st.divider()
-
-        # ChatGPT
-        col_img, col_txt = st.columns([1, 12])
-        with col_img:
-            st.image(LOGOS["ChatGPT"], width=45)
-        with col_txt:
-            st.markdown("**ChatGPT (챗GPT)**\n- 파이썬, HTML, C언어 등 정보 교과 실습 과제의 기초 코드 작성과 주석 해설에 유용합니다.")
+        render_ai_card("Claude (클로드)", "🟠", LOGOS["Claude"], "복잡한 코드 오류(디버깅) 원인을 친절하게 설명하고 깔끔한 알고리즘 코드를 작성해 줍니다.")
+        render_ai_card("ChatGPT (챗GPT)", "🟢", LOGOS["ChatGPT"], "파이썬, HTML, C언어 등 정보 교과 실습 과제의 기초 코드 작성과 주석 해설에 유용합니다.")
 
 # ---------------------------------------------------------
 # 3단계: 프롬프트
