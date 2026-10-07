@@ -1,4 +1,5 @@
 import streamlit as st
+import random
 
 st.set_page_config(
     page_title="AI 100% 진짜 활용법 - Self-Guided Quest",
@@ -12,39 +13,101 @@ st.markdown("<p style='text-align: center; color: #4B5563;'>선생님 없이 스
 if 'completed_stages' not in st.session_state:
     st.session_state.completed_stages = []
 
-progress = len(st.session_state.completed_stages) / 4.0
-st.progress(progress)
-st.caption(f"🎯 전체 진행률: {int(progress * 100)}% ({len(st.session_state.completed_stages)}/4 스테이지 완료)")
+progress = len(st.session_state.completed_stages) / 3.0
+st.progress(min(progress, 1.0))
+st.caption(f"🎯 전체 진행률: {int(min(progress, 1.0) * 100)}% ({len(st.session_state.completed_stages)}/3 스테이지 완료)")
 
-tab1, tab2, tab3, tab4 = st.tabs([
+tab1, tab2, tab3 = st.tabs([
     "🕵️ Stage 1: AI 오류 수사대", 
     "🎯 Stage 2: 상황별 AI Pick", 
-    "⚡ Stage 3: 프롬프트 & 팩트체크", 
-    "🏆 Stage 4: 마스터 인증서"
+    "⚡ Stage 3: 프롬프트 & 팩트체크"
 ])
 
-with tab1:
-    st.subheader("🕵️ Stage 1: AI의 거짓말(할루시네이션)을 찾아라!")
-    st.write("AI가 그럴듯하게 거짓말한 문장을 찾아내어 적발하세요.")
-    
-    q1 = st.radio(
-        "Q1. 아래 AI 답변 중 '할루시네이션(거짓 정보)'이 포함된 부분은 어디일까요?",
-        [
-            "① 세종대왕은 조선의 4대 국왕으로 훈민정음을 창제하였다.",
-            "② 세종대왕은 신하들과 집현전 학술 토론 중 분노하여 맥북 프로를 던졌다.",
-            "③ 세종대왕 시대에는 측우기, 해시계 등 다양한 과학 기구가 발명되었다."
+# Stage 1 문제 데이터베이스 (배경지식 없이 검색으로 팩트체크하는 문제들)
+questions_db = [
+    {
+        "id": 1,
+        "title": "🔍 사건 #1: 우주비행사의 셀카?",
+        "ai_claim": "1969년 아폴로 11호 달 착륙 성공 당시, 우주비행사 암스트롱은 스마트폰으로 지구에 실시간 셀카 사진을 전송했다.",
+        "options": [
+            "① 참 (실제로 일어난 일이다)",
+            "② 거짓 (스마트폰 연도와 달 착륙 연도가 맞지 않는 할루시네이션이다)"
         ],
+        "answer_index": 1,
+        "hint": "💡 **배경지식 없이 검증하기 (검색 팁)**\n포털창에 `[아폴로 11호 연도(1969)]`와 `[스마트폰 개발 연도]`를 각각 검색해서 연도를 대조해 보세요!",
+        "explanation": "🎉 **정답입니다! (거짓 적발 성공)**\n세계 최초의 스마트폰(IBM 사이먼)은 1992년에 나왔습니다. 배경지식이 없어도 **'두 연도 검색 대조(Timeline Check)'**로 10초 만에 AI 거짓말을 적발할 수 있습니다!"
+    },
+    {
+        "id": 2,
+        "title": "🔍 사건 #2: 조선시대 독도 스쿠버 다이빙?",
+        "ai_claim": "조선시대 안용복은 조선왕조실록 기록에 따라 자폐식 스쿠버 다이빙 장비를 직접 제작하여 독도 바닷속을 탐사했다.",
+        "options": [
+            "① 참 (조선시대 기술로 다이빙 장비를 만들어 탐사했다)",
+            "② 거짓 (안용복의 활동 시기와 스쿠버 다이빙 장비 발명 시기가 맞지 않는다)"
+        ],
+        "answer_index": 1,
+        "hint": "💡 **배경지식 없이 검증하기 (검색 팁)**\n포털창에 `[안용복 활동 시기(17세기)]`와 `[스쿠버 다이빙 장비 발명 연도(20세기)]`를 검색해서 대조해 보세요!",
+        "explanation": "🎉 **정답입니다! (거짓 적발 성공)**\n현대적 스쿠버 장비(Aqua-Lung)는 1943년 프랑스에서 발명되었습니다. **'인물 시기 vs 장비 발명 연도 대조'**로 가짜 뉴스임을 즉시 검증할 수 있습니다!"
+    },
+    {
+        "id": 3,
+        "title": "🔍 사건 #3: 대한민국 청소년 수면 보장법?",
+        "ai_claim": "2023년 대한민국 국회에서는 중고등학생의 매일 8시간 수면을 법적으로 의무화하는 '청소년 수면 보장법'이 만장일치로 통과되어 시행 중이다.",
+        "options": [
+            "① 참 (실제로 통과되어 시행 중인 법률이다)",
+            "② 거짓 (실제 존재하지 않는 법안이며 AI가 지어낸 지어냄 현상이다)"
+        ],
+        "answer_index": 1,
+        "hint": "💡 **배경지식 없이 검증하기 (검색 팁)**\n포털 뉴스 탭에 `\"청소년 수면 보장법\" 만장일치`를 따옴표 검색해 보세요. 실제 뉴스 기사가 나오나요?",
+        "explanation": "🎉 **정답입니다! (거짓 적발 성공)**\n포털 뉴스 검색 결과가 0건입니다! 실제로 존재하지 않는 법안을 AI가 그럴듯하게 지어낸 경우, **'키워드 포털 교차 검색(Cross-Search)'**으로 100% 가려낼 수 있습니다."
+    },
+    {
+        "id": 4,
+        "title": "🔍 사건 #4: 메밀꽃 필 무렵의 인스타그램 연재?",
+        "ai_claim": "소설가 이효석은 1936년 발표한 단편소설 <메밀꽃 필 무렵>을 인스타그램에 매주 연재하여 당시 청년들의 대대적인 호응을 얻었다.",
+        "options": [
+            "① 참 (당시 소설가가 SNS를 적극 활용했다)",
+            "② 거짓 (소설 발표 연도와 SNS 서비스 시기가 맞지 않는 가짜 사실이다)"
+        ],
+        "answer_index": 1,
+        "hint": "💡 **배경지식 없이 검증하기 (검색 팁)**\n`[메밀꽃 필 무렵(1936년)]`과 `[인스타그램 출시 연도(2010년)]`를 비교해 보세요!",
+        "explanation": "🎉 **정답입니다! (거짓 적발 성공)**\n1936년 일제강점기에는 인터넷과 인스타그램이 없었습니다! **'서비스 연도 교차 검증'**으로 오류를 쉽게 잡아낼 수 있습니다."
+    }
+]
+
+with tab1:
+    st.subheader("🕵️ Stage 1: AI 오류 수사대 (배경지식 없이 팩트체크하기)")
+    st.info("💡 **핵심 노하우**: 배경지식이 없어도 **'연도 대조'**나 **'포털 키워드 검색'**을 활용하면 AI의 거짓말(할루시네이션)을 100% 적발할 수 있습니다!")
+    
+    if 'q_idx' not in st.session_state:
+        st.session_state.q_idx = random.randint(0, len(questions_db) - 1)
+        
+    if st.button("🎲 다른 문제 랜덤 뽑기"):
+        st.session_state.q_idx = random.randint(0, len(questions_db) - 1)
+        st.rerun()
+            
+    current_q = questions_db[st.session_state.q_idx]
+    
+    st.markdown(f"### {current_q['title']}")
+    st.warning(f"🤖 **AI의 주장**: \"{current_q['ai_claim']}\"")
+    
+    with st.expander("🔍 배경지식이 없는데 어떻게 검증하나요? (팩트체크 힌트 보기)"):
+        st.markdown(current_q['hint'])
+        
+    user_choice = st.radio(
+        "이 AI 답변은 참일까요, 거짓일까요?",
+        current_q['options'],
+        key=f"q_radio_{current_q['id']}",
         index=None
     )
     
-    if q1:
-        if "②" in q1:
-            st.success("🎉 정답입니다! 조선시대에는 맥북이 없었습니다.")
+    if user_choice:
+        if current_q['options'].index(user_choice) == current_q['answer_index']:
+            st.success(current_q['explanation'])
             if 1 not in st.session_state.completed_stages:
                 st.session_state.completed_stages.append(1)
-                st.rerun()
         else:
-            st.error("❌ 다시 생각해보세요! 시기와 도구를 살펴보세요.")
+            st.error("❌ 다시 생각해보세요! 위의 [팩트체크 힌트]를 참고해 검색해보세요.")
 
 with tab2:
     st.subheader("🎯 Stage 2: 과제 특성별 최적의 AI 골라쓰기")
@@ -88,28 +151,6 @@ with tab3:
         chk3 = st.checkbox("3단계: 윤리성 및 저작권 (내 언어로 재구성 완료)")
         
         if chk1 and chk2 and chk3:
-            st.success("✅ 3단계 팩트체크 완료!")
+            st.success("🎉 축하합니다! 3단계 팩트체크 및 모든 퀘스트를 완수하셨습니다!")
             if 3 not in st.session_state.completed_stages:
                 st.session_state.completed_stages.append(3)
-
-with tab4:
-    st.subheader("🏆 Stage 4: AI 리터러시 마스터 인증서 발급")
-    if len(st.session_state.completed_stages) >= 3:
-        user_name = st.text_input("학생 이름을 입력하세요:", "홍길동")
-        school_name = st.text_input("학교명을 입력하세요:", "OO중학교")
-        
-        if st.button("🎓 인증서 발급하기"):
-            st.balloons()
-            st.markdown(f"""
-            <div style='border: 8px solid #2563EB; padding: 2rem; border-radius: 16px; text-align: center; background-color: #FFFFFF;'>
-                <h1 style='color: #1E3A8A;'>📜 AI 100% 스마트 리터러시 마스터 증서</h1>
-                <p style='font-size: 1.2rem;'><b>성명:</b> {user_name} ({school_name})</p>
-                <hr>
-                <p>위 학생은 <b>2026 AI Teach-Up Self-Guided 퀘스트</b>를 성실히 이수하여,<br>
-                상황별 AI 선택(Pick) 및 비판적 팩트체크(Check) 역량을 갖추었음을 인증합니다.</p>
-            </div>
-            """, unsafe_allow_html=True)
-            if 4 not in st.session_state.completed_stages:
-                st.session_state.completed_stages.append(4)
-    else:
-        st.warning("⚠️ Stage 1~3 미션을 먼저 수행해야 마스터 인증서를 발급받을 수 있습니다!")
