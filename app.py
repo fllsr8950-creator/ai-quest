@@ -104,7 +104,7 @@ with tab1:
     if 'current_case' not in st.session_state:
         st.session_state.current_case = generate_infinite_case()
         
-    col_a, col_b = st.columns()
+    col_a, col_b = st.columns([3, 1])
     with col_b:
         if st.button("🎲 새로운 사건 받기 (무한)"):
             st.session_state.current_case = generate_infinite_case()
