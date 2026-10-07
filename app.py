@@ -13,11 +13,12 @@ st.markdown("""
     .main-title { font-size: 2.2rem; font-weight: 800; color: #1E3A8A; text-align: center; margin-bottom: 0.3rem; }
     .sub-title { font-size: 1.05rem; color: #4B5563; text-align: center; margin-bottom: 1.5rem; }
     .bridge-box { background-color: #EFF6FF; border-left: 5px solid #2563EB; padding: 1.2rem; border-radius: 8px; margin-top: 1.5rem; }
+    .skip-box { background-color: #F3F4F6; border: 1px dashed #9CA3AF; padding: 1rem; border-radius: 8px; margin-bottom: 1.5rem; }
 </style>
 """, unsafe_allow_html=True)
 
 st.markdown("<div class='main-title'>🚀 중고생을 위한 AI 100% 진짜 활용법</div>", unsafe_allow_html=True)
-st.markdown("<div class='sub-title'>Stage 1(한계 진단) ➔ Stage 2(AI 선택) ➔ Stage 3(프롬프트 & 검증) 3단계 클리어 퀘스트</div>", unsafe_allow_html=True)
+st.markdown("<div class='sub-title'>수준별 자유 선택: Stage 1(한계 진단) ➔ Stage 2(AI 선택) ➔ Stage 3(프롬프트 & 검증)</div>", unsafe_allow_html=True)
 
 if 'completed_stages' not in st.session_state:
     st.session_state.completed_stages = []
@@ -29,9 +30,9 @@ st.progress(min(progress, 1.0))
 st.caption(f"🎯 전체 퀘스트 달성도: {int(min(progress, 1.0) * 100)}% ({len(st.session_state.completed_stages)}/3 단계 완료)")
 
 tab1, tab2, tab3 = st.tabs([
-    "🕵️ Stage 1: AI 오류 수사대 (한계 체감)", 
+    "🕵️ Stage 1: AI 오류 수사대 (입문)", 
     "🎯 Stage 2: 과제별 AI Pick (도구 선택)", 
-    "⚡ Stage 3: 프롬프트 & 팩트체크 (실전 기술)"
+    "⚡ Stage 3: 프롬프트 & 팩트체크 (실전 응용)"
 ])
 
 # ---------------------------------------------------------
@@ -67,7 +68,7 @@ def generate_infinite_case():
     subj = random.choice(subjects)
     
     claim = f"{fig_era} {fig}({fig_fact})은 {subj} 중 효율성을 높이기 위해 {ana}했다."
-    hint = f"💡 **팩트체크 힌트**: 포털에 `[{fig} 활동 시기]`와 `[{ana_fact.split()[0]} 시기]`를 각각 검색해 연도를 대조해 보세요!"
+    hint = f"💡 **팩트체크 힌트**: 포털에 `[{fig} 활동 시기]`와 `[{ana_fact.split()} 시기]`를 각각 검색해 연도를 대조해 보세요!"
     explanation = f"🎉 **거짓 적발 성공!**\n{fig}의 활동 시기와 {ana_fact}의 연도는 서로 맞지 않습니다. 이처럼 AI는 연도와 문맥을 조합해 그럴듯한 가짜 사실을 만듭니다."
     
     return {
@@ -80,7 +81,22 @@ def generate_infinite_case():
 # STAGE 1: AI 오류 수사대
 # ---------------------------------------------------------
 with tab1:
-    st.subheader("🕵️ Stage 1: AI 오류 수사대 (무한 라이브 사건 파일)")
+    st.subheader("🕵️ Stage 1: AI 오류 수사대 (오류 검증 입문)")
+    
+    # --- 건너뛰기 패스 기능 ---
+    st.markdown("""
+    <div class='skip-box'>
+        <b>💡 이미 AI 팩트체크 방법을 잘 알고 계시나요?</b><br>
+        1단계를 건너뛰고 바로 내 과제에 맞는 AI 도구 선택(Stage 2)이나 질문 생성(Stage 3)으로 이동하셔도 좋습니다!
+    </div>
+    """, unsafe_allow_html=True)
+    
+    if st.button("⏩ 난 이미 팩트체크 고수! Stage 1 건너뛰기"):
+        if 1 not in st.session_state.completed_stages:
+            st.session_state.completed_stages.append(1)
+        st.success("⚡ Stage 1 통과 완료! 상단의 [Stage 2: 과제별 AI Pick] 탭으로 이동하세요.")
+        st.rerun()
+
     st.markdown("""
     > **미션 목표**: AI가 그럴듯하게 지어낸 가짜 사실(할루시네이션)을 **'배경지식 없이 연도 대조/검색'**만으로 적발하세요!
     """)
@@ -88,7 +104,7 @@ with tab1:
     if 'current_case' not in st.session_state:
         st.session_state.current_case = generate_infinite_case()
         
-    col_a, col_b = st.columns([3, 1])
+    col_a, col_b = st.columns()
     with col_b:
         if st.button("🎲 새로운 사건 받기 (무한)"):
             st.session_state.current_case = generate_infinite_case()
@@ -98,7 +114,7 @@ with tab1:
     
     st.warning(f"🤖 **AI가 생성한 사건 보고서**: \"{c['claim']}\"")
     
-    with st.expander("🔍 배경지식 없이 검증하는 법 (팩트체크 힌트)"):
+    with st.expander("🔍 배경지식이 없는데 어떻게 검증하나요? (팩트체크 힌트)"):
         st.markdown(c['hint'])
         
     user_ans = st.radio(
@@ -116,17 +132,11 @@ with tab1:
             st.session_state.solved_cases_count += 1
             st.metric("🕵️ 내 누적 오류 적발 건수", f"{st.session_state.solved_cases_count}건 성공!")
             
-            # --- STAGE 2로 넘어가는 명확한 이유 (Narrative Bridge) ---
             st.markdown("""
             <div class='bridge-box'>
-                <h4>💡 1단계를 마친 당신! 하지만 여기서 끝일까요?</h4>
-                <p><b>"AI 오류를 다 찾을 수 있는데, 2~3단계는 왜 가야 하죠?"</b></p>
-                <ul>
-                    <li><b>문제점</b>: AI 답변을 매번 일일이 구글에 검색하고 연도 대조하는 건 <b>시간이 너무 오래 걸리고 피곤합니다!</b></li>
-                    <li><b>해결책 (Stage 2)</b>: 처음부터 검색 기반 AI(Perplexity/Gemini)를 고르면 일일이 팩트체크하는 수고가 90% 줄어듭니다.</li>
-                    <li><b>해결책 (Stage 3)</b>: AI에게 정교한 질문(프롬프트)을 던지면 처음부터 오류 없는 정확한 답을 뽑아낼 수 있습니다.</li>
-                </ul>
-                <p>👉 <b>지금 상단 [Stage 2: 과제별 AI Pick] 탭으로 이동하여 시간을 10배 아끼는 AI 도구를 골라보세요!</b></p>
+                <h4>💡 1단계를 마친 당신! 다음 단계로 가볼까요?</h4>
+                <p>매번 일일이 구글링해서 팩트체크하는 건 시간이 너무 오래 걸립니다.</p>
+                <p>👉 <b>[Stage 2: 과제별 AI Pick] 탭으로 이동하여 처음부터 팩트와 출처를 잘 달아주는 AI 도구를 골라보세요!</b></p>
             </div>
             """, unsafe_allow_html=True)
             
@@ -173,25 +183,34 @@ with tab2:
 # STAGE 3: 프롬프트 & 팩트체크
 # ---------------------------------------------------------
 with tab3:
-    st.subheader("⚡ Stage 3: 프롬프트 3법칙 & 최종 팩트체크 스위치")
-    st.info("💡 **왜 Stage 3가 필요한가요?** 나쁜 질문을 던지면 똑똑한 AI도 거짓말을 합니다. 정교한 프롬프트로 100% 원하는 답변을 한 번에 뽑아내세요!")
+    st.subheader("⚡ Stage 3: 내 맘대로 만드는 AI 프롬프트 & 최종 검증")
+    st.info("💡 **왜 Stage 3가 필요한가요?** 성의 없이 질문하면 AI도 대충 답합니다! AI에게 확실한 역할과 모양을 지정해 주면 100점짜리 답변이 나옵니다.")
     
     col1, col2 = st.columns(2)
     with col1:
-        st.markdown("#### 1️⃣ 프롬프트 3법칙 자동 조합기")
-        role = st.text_input("역할 (Role)", "고등학교 정보 선생님")
-        topic = st.text_input("주제/과제", "인공지능 윤리와 저작권 문제")
-        constraint = st.text_input("제약조건 (Constraint)", "어려운 용어 없이 3개 요약, 출처 명시")
-        format_out = st.selectbox("출력형식 (Format)", ["불릿 포인트", "표 형식", "대화체"])
+        st.markdown("#### 1️⃣ AI 맞춤 질문(프롬프트) 조립기")
+        role = st.text_input("🎭 AI의 캐릭터 / 직업 (어떤 역할로 답해줄까요?)", "친절한 고등학교 정보 선생님")
+        topic = st.text_input("📌 내가 궁금한 주제/과제", "인공지능 윤리와 저작권 문제")
+        constraint = st.text_input("🚫 꼭 지켜야 할 약속/조건", "초등학생도 이해할 쉬운 단어로 3가지 요약")
         
-        generated_prompt = f"당신은 [{role}]입니다. [{topic}]에 대해 작성해 주세요.\n[제약조건]: {constraint}\n[출력형식]: {format_out}로 작성해 주세요."
-        st.text_area("완성된 100% 프롬프트 (복사해서 AI에 입력하세요):", generated_prompt, height=120)
+        format_out = st.selectbox(
+            "📐 원하는 답변 모양 선택하기", 
+            [
+                "📌 1, 2, 3 번호로 핵심만 깔끔 요약",
+                "💬 발표 대본 / 친근한 수다 말투 (~했단다, ~해요)",
+                "📊 한눈에 비교하는 정돈된 표",
+                "📝 학교 수행평가 제출용 깔끔한 줄글 설명문"
+            ]
+        )
+        
+        generated_prompt = f"당신은 [{role}]입니다. [{topic}]에 대해 알려주세요.\n\n[약속/조건]: {constraint}\n[답변 모양]: {format_out} 형태로 작성해 주세요."
+        st.text_area("✨ 완성된 명품 질문 (복사해서 AI에 그대로 입력하세요):", generated_prompt, height=140)
         
     with col2:
-        st.markdown("#### 2️⃣ 최종 제출 전 3단계 팩트체크 스위치")
-        chk1 = st.checkbox("1단계: 출처 명확성 (숫자, 인명, 연도 클릭 확인 완료)")
-        chk2 = st.checkbox("2단계: 단일 AI 의존 탈피 (상황별 최적 AI 활용 완료)")
-        chk3 = st.checkbox("3단계: 윤리적 재구성 (베끼지 않고 내 언어로 재작성 완료)")
+        st.markdown("#### 2️⃣ 최종 제출 전 3단계 팩트체크 체크리스트")
+        chk1 = st.checkbox("1단계: 출처 체크 (숫자, 날짜, 인명을 포털에서 직접 대조해 보았나요?)")
+        chk2 = st.checkbox("2단계: 도구 체크 (과제 성격에 맞는 최적의 AI를 사용하였나요?)")
+        chk3 = st.checkbox("3단계: 내 글로 재구성 (AI 답변을 그대로 복사하지 않고 내 언어로 바꿨나요?)")
         
         if chk1 and chk2 and chk3:
             st.balloons()
