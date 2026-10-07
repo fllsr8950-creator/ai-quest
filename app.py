@@ -62,8 +62,8 @@ st.markdown("""
         gap: 14px;
         padding: 12px 14px;
         border-radius: 10px;
-        background-color: rgba(128, 128, 128, 0.06);
-        border: 1px solid rgba(128, 128, 128, 0.15);
+        background-color: rgba(128, 128, 128, 0.08);
+        border: 1px solid rgba(128, 128, 128, 0.2);
         margin-bottom: 12px;
     }
     .ai-card-img {
@@ -86,18 +86,10 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-# Helper function to render AI Cards robustly
+# Helper function to render AI Cards without markdown code-block triggering
 def render_ai_card(name, emoji, logo_url, description):
     img_html = f'<img src="{logo_url}" class="ai-card-img" onerror="this.style.display=\'none\'" alt="{name}">' if logo_url else ''
-    card_html = f"""
-    <div class="ai-card">
-        {img_html}
-        <div>
-            <div class="ai-card-title">{emoji} {name}</div>
-            <div class="ai-card-desc">{description}</div>
-        </div>
-    </div>
-    """
+    card_html = f'<div class="ai-card">{img_html}<div><div class="ai-card-title">{emoji} {name}</div><div class="ai-card-desc">{description}</div></div></div>'
     st.markdown(card_html, unsafe_allow_html=True)
 
 # ---------------------------------------------------------
@@ -254,7 +246,7 @@ with tab1:
             st.error("다시 검증해 보세요! 힌트를 참고하여 두 연도가 일치하는지 확인해 보세요.")
 
 # ---------------------------------------------------------
-# 2단계: 과제별 AI 선택 (PNG Thumbnails + Fail-safe HTML Cards)
+# 2단계: 과제별 AI 선택
 # ---------------------------------------------------------
 LOGOS = {
     "Claude": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/70/Claude_AI_logo.svg/200px-Claude_AI_logo.svg.png",
