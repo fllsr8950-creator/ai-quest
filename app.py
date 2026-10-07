@@ -53,7 +53,13 @@ st.markdown("""
         word-break: break-word !important;
     }
     
-    /* 💥 CRITICAL FIX: Checkbox label text truncation fix for mobile screens */
+    /* Selectbox label styling */
+    div[data-testid="stSelectbox"] label p {
+        font-size: 1.05rem !important;
+        font-weight: 700 !important;
+    }
+
+    /* Checkbox label text truncation fix for mobile screens */
     div[data-testid="stCheckbox"] label, 
     div[data-testid="stCheckbox"] label p,
     div[data-testid="stCheckbox"] p,
@@ -88,7 +94,7 @@ IMAGE_FILES = {
 
 def render_ai_card(name, key, description):
     filename = IMAGE_FILES.get(key, "")
-    col_img, col_txt = st.columns([1, 5])
+    col_img, col_txt = st.columns()
     
     with col_img:
         if filename and os.path.exists(filename):
@@ -162,21 +168,21 @@ subjects = [
 def generate_infinite_case():
     selected_fig = random.choice(figures)
     if isinstance(selected_fig, (tuple, list)):
-        fig = str(selected_fig[0]) if len(selected_fig) > 0 else "세종대왕"
-        fig_fact = str(selected_fig[1]) if len(selected_fig) > 1 else "역사적 사건"
-        fig_era = str(selected_fig[2]) if len(selected_fig) > 2 else "조선시대"
+        fig = str(selected_fig) if len(selected_fig) > 0 else "세종대왕"
+        fig_fact = str(selected_fig) if len(selected_fig) > 1 else "역사적 사건"
+        fig_era = str(selected_fig) if len(selected_fig) > 2 else "조선시대"
     else:
         fig, fig_fact, fig_era = str(selected_fig), "역사적 사건", "조선시대"
 
     selected_ana = random.choice(anachronisms)
     if isinstance(selected_ana, (tuple, list)):
-        ana = str(selected_ana[0]) if len(selected_ana) > 0 else "스마트폰 사용"
-        ana_fact = str(selected_ana[1]) if len(selected_ana) > 1 else "2000년대 기술"
+        ana = str(selected_ana) if len(selected_ana) > 0 else "스마트폰 사용"
+        ana_fact = str(selected_ana) if len(selected_ana) > 1 else "2000년대 기술"
     else:
         ana, ana_fact = str(selected_ana), "2000년대 기술"
 
     subj = str(random.choice(subjects))
-    ana_fact_word = ana_fact.split()[0] if isinstance(ana_fact, str) and ana_fact.split() else str(ana_fact)
+    ana_fact_word = ana_fact.split() if isinstance(ana_fact, str) and ana_fact.split() else str(ana_fact)
 
     claim = f"{fig_era} {fig}({fig_fact})은 {subj} 중 효율성을 높이기 위해 {ana}했다."
     hint = f"팩트체크 힌트: 포털에 [{fig} 활동 시기]와 [{ana_fact_word} 시기]를 각각 검색해 연도를 대조해 보세요!"
@@ -252,16 +258,16 @@ with tab2:
     st.info("왜 2단계가 필요한가요? 1단계처럼 매번 일일이 팩트체크하기 귀찮죠? 과제 특성에 맞는 최적의 AI를 고르면 거짓말 확률이 극적으로 낮아집니다!")
     
     task_type = st.selectbox(
-        "내가 진행하려는 과제 성격은 무엇인가요?",
+        "내가 진행하려는 과제는 무엇인가요?",
         [
             "선택하세요",
-            "🔍 최신 정보, 뉴스, 논문 출처 조사 및 보고서 내용 검토 과제",
-            "📚 학습 자료 정리, 내용 이해 및 AI 퀴즈/시험 대비 생성 과제",
-            "✍️ 긴 글 분석, 보고서 작문, 독후감 및 논술 과제",
-            "📐 수학 문제 풀이, 교과 개념 이해 및 오답 노트 과제",
-            "🎨 발표용 슬라이드(PPT), 문서 제작, 카드뉴스 및 인포그래픽 작업",
-            "🌐 영어/외국어 독해, 회화, 영작문 및 번역 과제",
-            "💻 코딩, 프로그래밍, 알고리즘 및 정보 교과 실습 과제"
+            "🔍 최신 정보·뉴스·논문 출처 조사 및 보고서 검토",
+            "📚 학습 자료 정리·이해 및 AI 퀴즈 생성",
+            "✍️ 긴 글 분석·보고서 작문·독후감 및 논술",
+            "📐 수학 문제 풀이·개념 이해 및 오답 노트",
+            "🎨 PPT·카드뉴스·인포그래픽 제작",
+            "🌐 영어/외국어 독해·회화·영작문 및 번역",
+            "💻 코딩·프로그래밍·알고리즘 및 정보 실습"
         ],
         key="task_type_select"
     )
