@@ -1,5 +1,6 @@
 import streamlit as st
 import random
+import base64
 
 st.set_page_config(
     page_title="2026CJU 중고생 AI 100% 진짜 활용법",
@@ -56,41 +57,58 @@ st.markdown("""
     }
 
     /* AI Card Item Styling */
-    .ai-card {
+    .ai-card-box {
         display: flex;
-        align-items: flex-start;
+        align-items: center;
         gap: 14px;
-        padding: 12px 14px;
-        border-radius: 10px;
+        padding: 12px 16px;
+        border-radius: 12px;
         background-color: rgba(128, 128, 128, 0.08);
-        border: 1px solid rgba(128, 128, 128, 0.2);
+        border: 1px solid rgba(128, 128, 128, 0.18);
         margin-bottom: 12px;
     }
     .ai-card-img {
-        width: 42px;
-        height: 42px;
-        object-fit: contain;
+        width: 44px;
+        height: 44px;
         flex-shrink: 0;
-        border-radius: 8px;
+        border-radius: 10px;
     }
     .ai-card-title {
         font-size: 1.1rem;
         font-weight: 700;
-        margin-bottom: 4px;
+        margin-bottom: 3px;
     }
     .ai-card-desc {
         font-size: 0.95rem;
-        line-height: 1.5;
+        line-height: 1.45;
         opacity: 0.9;
     }
 </style>
 """, unsafe_allow_html=True)
 
-# Helper function to render AI Cards without markdown code-block triggering
-def render_ai_card(name, emoji, logo_url, description):
-    img_html = f'<img src="{logo_url}" class="ai-card-img" onerror="this.style.display=\'none\'" alt="{name}">' if logo_url else ''
-    card_html = f'<div class="ai-card">{img_html}<div><div class="ai-card-title">{emoji} {name}</div><div class="ai-card-desc">{description}</div></div></div>'
-    st.markdown(card_html, unsafe_allow_html=True)
+# Embedded Vector SVG Data URIs (100% reliable, zero network reliance, no broken images)
+def make_svg_uri(svg_code):
+    b64 = base64.b64encode(svg_code.strip().encode('utf-8')).decode('utf-8')
+    return f"data:image/svg+xml;base64,{b64}"
+
+LOGOS = {
+    "Claude": make_svg_uri('''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" rx="22" fill="#CC785C"/><path d="M50 20 L58 42 L80 50 L58 58 L50 80 L42 58 L20 50 L42 42 Z" fill="#FFFFFF"/></svg>'''),
+    "ChatGPT": make_svg_uri('''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" rx="22" fill="#10A37F"/><circle cx="50" cy="50" r="28" stroke="#FFFFFF" stroke-width="8" fill="none"/><path d="M50 22 A28 28 0 0 1 78 50" stroke="#FFFFFF" stroke-width="12" stroke-linecap="round" fill="none"/></svg>'''),
+    "Gemini": make_svg_uri('''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" rx="22" fill="#1B72E8"/><path d="M50 15 C50 35 65 50 85 50 C65 50 50 65 50 85 C50 65 35 50 15 50 C35 50 50 35 50 15 Z" fill="#FFFFFF"/></svg>'''),
+    "Perplexity": make_svg_uri('''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" rx="22" fill="#20B2AA"/><path d="M30 30 L70 30 L70 70 L30 70 Z M50 20 L50 80 M20 50 L80 50" stroke="#FFFFFF" stroke-width="8" stroke-linecap="round" fill="none"/></svg>'''),
+    "Canva": make_svg_uri('''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" rx="22" fill="#00C4CC"/><text x="50" y="66" font-family="sans-serif" font-weight="900" font-size="48" fill="#FFFFFF" text-anchor="middle">C</text></svg>'''),
+    "NotebookLM": make_svg_uri('''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" rx="22" fill="#4285F4"/><rect x="25" y="20" width="50" height="60" rx="6" fill="#FFFFFF"/><line x1="35" y1="35" x2="65" y2="35" stroke="#4285F4" stroke-width="6" stroke-linecap="round"/><line x1="35" y1="48" x2="65" y2="48" stroke="#4285F4" stroke-width="6" stroke-linecap="round"/><line x1="35" y1="61" x2="55" y2="61" stroke="#4285F4" stroke-width="6" stroke-linecap="round"/></svg>'''),
+    "Liner": make_svg_uri('''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" rx="22" fill="#FFC107"/><path d="M25 65 L60 30 L75 45 L40 80 Z M65 25 L75 35" stroke="#212529" stroke-width="7" fill="none" stroke-linejoin="round"/></svg>'''),
+    "QANDA": make_svg_uri('''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" rx="22" fill="#FF6B00"/><text x="50" y="65" font-family="sans-serif" font-weight="900" font-size="42" fill="#FFFFFF" text-anchor="middle">Q</text></svg>'''),
+    "Gamma": make_svg_uri('''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" rx="22" fill="#8A2BE2"/><path d="M50 20 L56 38 L74 44 L56 50 L50 68 L44 50 L26 44 L44 38 Z M70 65 L73 75 L83 78 L73 81 L70 91 L67 81 L57 78 L67 75 Z" fill="#FFFFFF"/></svg>'''),
+    "ThetaWaveAI": make_svg_uri('''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" rx="22" fill="#6366F1"/><path d="M20 50 Q35 20 50 50 T80 50" stroke="#FFFFFF" stroke-width="8" fill="none" stroke-linecap="round"/></svg>'''),
+    "UnivAI": make_svg_uri('''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" rx="22" fill="#2563EB"/><path d="M50 25 L85 40 L50 55 L15 40 Z M85 40 L85 65 M30 50 L30 70 Q50 82 70 70 L70 50" stroke="#FFFFFF" stroke-width="6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>''')
+}
+
+def render_ai_card(name, logo_key, description):
+    logo_src = LOGOS.get(logo_key, "")
+    html = f'<div class="ai-card-box"><img src="{logo_src}" class="ai-card-img" alt="{name}"><div><div class="ai-card-title">{name}</div><div class="ai-card-desc">{description}</div></div></div>'
+    st.markdown(html, unsafe_allow_html=True)
 
 # ---------------------------------------------------------
 # State Management & Progress Calculation (Top of Script)
@@ -98,7 +116,6 @@ def render_ai_card(name, emoji, logo_url, description):
 if 'solved_cases_count' not in st.session_state:
     st.session_state.solved_cases_count = 0
 
-# Calculate completed stages upfront before rendering header
 completed = []
 
 # Stage 1: solved at least once
@@ -226,7 +243,6 @@ with tab1:
             st.session_state.stage1_done = True
             st.success(c['explanation'])
             
-            # Increment count if not already counted for this case
             if st.session_state.get('last_solved_claim') != c['claim']:
                 st.session_state.solved_cases_count += 1
                 st.session_state.last_solved_claim = c['claim']
@@ -248,14 +264,6 @@ with tab1:
 # ---------------------------------------------------------
 # 2단계: 과제별 AI 선택
 # ---------------------------------------------------------
-LOGOS = {
-    "Claude": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/70/Claude_AI_logo.svg/200px-Claude_AI_logo.svg.png",
-    "ChatGPT": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/04/ChatGPT_logo.svg/200px-ChatGPT_logo.svg.png",
-    "Gemini": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8a/Google_Gemini_logo.svg/200px-Google_Gemini_logo.svg.png",
-    "Perplexity": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1d/Perplexity_AI_logo.svg/200px-Perplexity_AI_logo.svg.png",
-    "Canva": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/08/Canva_icon_2021.svg/200px-Canva_icon_2021.svg.png"
-}
-
 with tab2:
     st.subheader("2단계: 과제별 AI 선택")
     st.info("왜 2단계가 필요한가요? 1단계처럼 매번 일일이 팩트체크하기 귀찮죠? 과제 특성에 맞는 최적의 AI를 고르면 거짓말 확률이 극적으로 낮아집니다!")
@@ -277,41 +285,41 @@ with tab2:
     
     if "🔍" in task_type:
         st.markdown("### 🏆 추천 AI 도구 목록")
-        render_ai_card("Perplexity (퍼플렉시티)", "🌐", LOGOS["Perplexity"], "실시간 웹 검색 연동 및 문장마다 출처(URL)를 직접 달아주어 팩트체크 수고를 90% 줄여줍니다.")
-        render_ai_card("Liner AI (라이너)", "🖍️", "", "전문 자료 조사와 학술·웹 출처 검증, 완성된 보고서/자료의 정밀 내용 검토에 특화되어 있습니다.")
-        render_ai_card("Google Gemini (제미나이)", "🔵", LOGOS["Gemini"], "구글 검색 생태계와 결합하여 최신 정보 탐색 및 이미지/문서 분석에 우수합니다.")
+        render_ai_card("Perplexity (퍼플렉시티)", "Perplexity", "실시간 웹 검색 연동 및 문장마다 출처(URL)를 직접 달아주어 팩트체크 수고를 90% 줄여줍니다.")
+        render_ai_card("Liner AI (라이너)", "Liner", "전문 자료 조사와 학술·웹 출처 검증, 완성된 보고서/자료의 정밀 내용 검토에 특화되어 있습니다.")
+        render_ai_card("Google Gemini (제미나이)", "Gemini", "구글 검색 생태계와 결합하여 최신 정보 탐색 및 이미지/문서 분석에 우수합니다.")
 
     elif "📚" in task_type:
         st.markdown("### 🏆 추천 AI 도구 목록")
-        render_ai_card("NotebookLM (노트북LM)", "📘", "", "내 교과서, 프린트, PDF 자료를 업로드하면 깊이 있는 내용 이해, 마인드맵/시각화 자료 및 오디오 가이드를 제공합니다.")
-        render_ai_card("ThetaWaveAI (세타웨이브 AI)", "🧠", "", "긴 학습 자료를 한눈에 들어오게 요약·정리하고, 시험 대비용 맞춤형 AI 퀴즈를 자동으로 생성해 줍니다.")
-        render_ai_card("Univ AI (유니브 AI)", "🎓", "", "교과 및 학술 자료의 체계적 정리와 복습용 실전 퀴즈 생성으로 자기주도 학습을 돕습니다.")
+        render_ai_card("NotebookLM (노트북LM)", "NotebookLM", "내 교과서, 프린트, PDF 자료를 업로드하면 깊이 있는 내용 이해, 마인드맵/시각화 자료 및 오디오 가이드를 제공합니다.")
+        render_ai_card("ThetaWaveAI (세타웨이브 AI)", "ThetaWaveAI", "긴 학습 자료를 한눈에 들어오게 요약·정리하고, 시험 대비용 맞춤형 AI 퀴즈를 자동으로 생성해 줍니다.")
+        render_ai_card("Univ AI (유니브 AI)", "UnivAI", "교과 및 학술 자료의 체계적 정리와 복습용 실전 퀴즈 생성으로 자기주도 학습을 돕습니다.")
 
     elif "✍️" in task_type:
         st.markdown("### 🏆 추천 AI 도구 목록")
-        render_ai_card("Claude (클로드)", "🟠", LOGOS["Claude"], "방대한 분량의 긴 글과 논문 분석, 자연스러운 보고서 작문 및 논리적 텍스트 생성에 가장 탁월합니다.")
-        render_ai_card("ChatGPT (챗GPT)", "🟢", LOGOS["ChatGPT"], "개념 요약, 아이디어 발상, 독후감 개요 작성 등 만능으로 활용하기 좋은 대표 AI입니다.")
+        render_ai_card("Claude (클로드)", "Claude", "방대한 분량의 긴 글과 논문 분석, 자연스러운 보고서 작문 및 논리적 텍스트 생성에 가장 탁월합니다.")
+        render_ai_card("ChatGPT (챗GPT)", "ChatGPT", "개념 요약, 아이디어 발상, 독후감 개요 작성 등 만능으로 활용하기 좋은 대표 AI입니다.")
 
     elif "📐" in task_type:
         st.markdown("### 🏆 추천 AI 도구 목록")
-        render_ai_card("QANDA (콴다)", "🔢", "", "수학 문제 풀이 과정 해설, 오답 원인 분석 및 단계별 문제 해결에 독보적인 수학 전문 AI입니다.")
-        render_ai_card("ChatGPT (챗GPT)", "🟢", LOGOS["ChatGPT"], "수학 공식의 원리와 논리적 풀이 절차를 친절하게 해설해 주는 학습 파트너입니다.")
+        render_ai_card("QANDA (콴다)", "QANDA", "수학 문제 풀이 과정 해설, 오답 원인 분석 및 단계별 문제 해결에 독보적인 수학 전문 AI입니다.")
+        render_ai_card("ChatGPT (챗GPT)", "ChatGPT", "수학 공식의 원리와 논리적 풀이 절차를 친절하게 해설해 주는 학습 파트너입니다.")
 
     elif "🎨" in task_type:
         st.markdown("### 🏆 추천 AI 도구 목록")
-        render_ai_card("Gamma (감마)", "✨", "", "한 줄 프롬프트나 아이디어만 입력하면 발표용 PPT 슬라이드와 전용 웹 문서를 1분 만에 디자인해 줍니다.")
-        render_ai_card("Canva AI (캔바)", "🎨", LOGOS["Canva"], "카드뉴스, 인포그래픽, 포스터 시각화 디자인 템플릿을 자동으로 완성해 줍니다.")
-        render_ai_card("NotebookLM (노트북LM)", "📘", "", "내 학습 자료를 기반으로 인포그래픽 개요와 시각화 자료 구상을 구체화해 줍니다.")
+        render_ai_card("Gamma (감마)", "Gamma", "한 줄 프롬프트나 아이디어만 입력하면 발표용 PPT 슬라이드와 전용 웹 문서를 1분 만에 디자인해 줍니다.")
+        render_ai_card("Canva AI (캔바)", "Canva", "카드뉴스, 인포그래픽, 포스터 시각화 디자인 템플릿을 자동으로 완성해 줍니다.")
+        render_ai_card("NotebookLM (노트북LM)", "NotebookLM", "내 학습 자료를 기반으로 인포그래픽 개요와 시각화 자료 구상을 구체화해 줍니다.")
 
     elif "🌐" in task_type:
         st.markdown("### 🏆 추천 AI 도구 목록")
-        render_ai_card("Claude (클로드)", "🟠", LOGOS["Claude"], "가장 원어민스럽고 자연스러운 뉘앙스의 영작문 교정 및 긴 원서 독해 해설을 제공합니다.")
-        render_ai_card("ChatGPT (챗GPT)", "🟢", LOGOS["ChatGPT"], "영어 회화 롤플레잉 연습, 문법 오류 수정, 어휘 설명에 우수한 외국어 학습 파트너입니다.")
+        render_ai_card("Claude (클로드)", "Claude", "가장 원어민스럽고 자연스러운 뉘앙스의 영작문 교정 및 긴 원서 독해 해설을 제공합니다.")
+        render_ai_card("ChatGPT (챗GPT)", "ChatGPT", "영어 회화 롤플레잉 연습, 문법 오류 수정, 어휘 설명에 우수한 외국어 학습 파트너입니다.")
 
     elif "💻" in task_type:
         st.markdown("### 🏆 추천 AI 도구 목록")
-        render_ai_card("Claude (클로드)", "🟠", LOGOS["Claude"], "복잡한 코드 오류(디버깅) 원인을 친절하게 설명하고 깔끔한 알고리즘 코드를 작성해 줍니다.")
-        render_ai_card("ChatGPT (챗GPT)", "🟢", LOGOS["ChatGPT"], "파이썬, HTML, C언어 등 정보 교과 실습 과제의 기초 코드 작성과 주석 해설에 유용합니다.")
+        render_ai_card("Claude (클로드)", "Claude", "복잡한 코드 오류(디버깅) 원인을 친절하게 설명하고 깔끔한 알고리즘 코드를 작성해 줍니다.")
+        render_ai_card("ChatGPT (챗GPT)", "ChatGPT", "파이썬, HTML, C언어 등 정보 교과 실습 과제의 기초 코드 작성과 주석 해설에 유용합니다.")
 
 # ---------------------------------------------------------
 # 3단계: 프롬프트
