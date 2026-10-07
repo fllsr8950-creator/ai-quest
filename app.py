@@ -17,7 +17,7 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 st.markdown("<div class='main-title'>중고생을 위한 AI 100% 진짜 활용법</div>", unsafe_allow_html=True)
-st.markdown("<div class='sub-title'>Stage 1(한계 진단) -> Stage 2(AI 선택) -> Stage 3(프롬프트 & 검증)</div>", unsafe_allow_html=True)
+st.markdown("<div class='sub-title'>1단계(한계 진단) -> 2단계(AI 선택) -> 3단계(프롬프트 & 검증)</div>", unsafe_allow_html=True)
 
 if 'completed_stages' not in st.session_state:
     st.session_state.completed_stages = []
@@ -29,9 +29,9 @@ st.progress(min(progress, 1.0))
 st.caption(f"전체 퀘스트 달성도: {int(min(progress, 1.0) * 100)}% ({len(st.session_state.completed_stages)}/3 단계 완료)")
 
 tab1, tab2, tab3 = st.tabs([
-    "Stage 1: AI 오류 수사대", 
-    "Stage 2: 과제별 AI Pick", 
-    "Stage 3: 프롬프트 & 팩트체크"
+    "1단계: AI 오류 수사대", 
+    "2단계: 과제별 AI Pick", 
+    "3단계: 프롬프트 & 팩트체크"
 ])
 
 # ---------------------------------------------------------
@@ -75,7 +75,7 @@ def generate_infinite_case():
     
     claim = f"{fig_era} {fig}({fig_fact})은 {subj} 중 효율성을 높이기 위해 {ana}했다."
     hint = f"팩트체크 힌트: 포털에 [{fig} 활동 시기]와 [{ana_fact.split()[0] if ana_fact.split() else ana_fact} 시기]를 각각 검색해 연도를 대조해 보세요!"
-    explanation = f"거짓 적발 성공!\n{fig}의 활동 시기와 {ana_fact}의 연도는 서로 맞지 않습니다. 이처럼 AI는 연도와 문맥을 조합해 그럴듯한 가짜 사실을 만듭니다."
+    explanation = f"거짓 적발 성공!\n{fig}의 활동 시기와 {ana_fact}의 연도는 서로 맞지 않습니다. 이처럼 AI는 연도와 문맥을 조합해 그럴듯한 거짓 정보를 만듭니다."
     
     return {
         "claim": claim,
@@ -84,12 +84,12 @@ def generate_infinite_case():
     }
 
 # ---------------------------------------------------------
-# STAGE 1: AI 오류 수사대
+# 1단계: AI 오류 수사대
 # ---------------------------------------------------------
 with tab1:
-    st.subheader("Stage 1: AI 오류 수사대")
+    st.subheader("1단계: AI 오류 수사대")
     st.markdown("""
-    > **미션 목표**: AI가 그럴듯하게 지어낸 가짜 사실(할루시네이션)을 **'배경지식 없이 연도 대조/검색'**만으로 적발하세요!
+    > **미션 목표**: AI가 그럴듯하게 지어낸 가짜 사실을 **'배경지식 없이 연도 대조/검색'**만으로 적발하세요!
     """)
     
     if 'current_case' not in st.session_state:
@@ -110,7 +110,7 @@ with tab1:
         
     user_ans = st.radio(
         "이 AI 문장은 참일까요, 거짓일까요?",
-        ["① 참 (실제 일어난 사실이다)", "② 거짓 (AI가 연도를 조작한 할루시네이션이다)"],
+        ["① 참 (실제 일어난 사실이다)", "② 거짓 (AI가 연도를 조작한 거짓 정보이다)"],
         index=None,
         key=f"radio_{hash(c['claim'])}"
     )
@@ -127,7 +127,7 @@ with tab1:
             <div class='bridge-box'>
                 <h4>1단계를 마친 당신! 다음 단계로 가볼까요?</h4>
                 <p>매번 일일이 구글링해서 팩트체크하는 건 시간이 너무 오래 걸립니다.</p>
-                <p>👉 <b>[Stage 2: 과제별 AI Pick] 탭으로 이동하여 처음부터 팩트와 출처를 잘 달아주는 AI 도구를 골라보세요!</b></p>
+                <p>👉 <b>[2단계: 과제별 AI Pick] 탭으로 이동하여 처음부터 팩트와 출처를 잘 달아주는 AI 도구를 골라보세요!</b></p>
             </div>
             """, unsafe_allow_html=True)
             
@@ -135,11 +135,11 @@ with tab1:
             st.error("다시 검증해 보세요! 힌트를 참고하여 두 연도가 일치하는지 확인해 보세요.")
 
 # ---------------------------------------------------------
-# STAGE 2: 과제별 AI Pick
+# 2단계: 과제별 AI Pick
 # ---------------------------------------------------------
 with tab2:
-    st.subheader("Stage 2: 상황별 AI 골라쓰기 (시간 절약 10배 전략)")
-    st.info("왜 Stage 2가 필요한가요? 1단계처럼 매번 일일이 팩트체크하기 귀찮죠? 과제 특성에 맞는 최적의 AI를 고르면 거짓말 확률이 극적으로 낮아집니다!")
+    st.subheader("2단계: 상황별 AI 골라쓰기")
+    st.info("왜 2단계가 필요한가요? 1단계처럼 매번 일일이 팩트체크하기 귀찮죠? 과제 특성에 맞는 최적의 AI를 고르면 거짓말 확률이 극적으로 낮아집니다!")
     
     task_type = st.selectbox(
         "내가 진행하려는 과제 성격은 무엇인가요?",
@@ -171,11 +171,11 @@ with tab2:
         if 2 not in st.session_state.completed_stages: st.session_state.completed_stages.append(2)
 
 # ---------------------------------------------------------
-# STAGE 3: 프롬프트 & 팩트체크
+# 3단계: 프롬프트 & 팩트체크
 # ---------------------------------------------------------
 with tab3:
-    st.subheader("Stage 3: 내 맘대로 만드는 AI 프롬프트 & 최종 검증")
-    st.info("왜 Stage 3가 필요한가요? 성의 없이 질문하면 AI도 대충 답합니다! AI에게 확실한 역할과 모양을 지정해 주면 100점짜리 답변이 나옵니다.")
+    st.subheader("3단계: 내 맘대로 만드는 AI 프롬프트 & 최종 검증")
+    st.info("왜 3단계가 필요한가요? 성의 없이 질문하면 AI도 대충 답합니다! AI에게 확실한 역할과 모양을 지정해 주면 100점짜리 답변이 나옵니다.")
     
     col1, col2 = st.columns(2)
     with col1:
