@@ -211,7 +211,7 @@ with tab1:
             st.error("다시 검증해 보세요! 힌트를 참고하여 두 연도가 일치하는지 확인해 보세요.")
 
 # ---------------------------------------------------------
-# 2단계: 과제별 AI 선택 (Logos & All Added AIs)
+# 2단계: 과제별 AI 선택 (Logos & Expanded Categories)
 # ---------------------------------------------------------
 LOGOS = {
     "Claude": "https://upload.wikimedia.org/wikipedia/commons/7/70/Claude_AI_logo.svg",
@@ -234,8 +234,11 @@ with tab2:
         [
             "선택하세요",
             "🔍 최신 정보, 뉴스, 논문 출처와 팩트 검증이 핵심인 과제",
-            "✍️ 긴 글 분석, 보고서 작문, 교과서 개념 및 수학 오답 풀이 과제",
-            "🎨 발표용 슬라이드(PPT), 카드뉴스, 인포그래픽 시각화 작업"
+            "✍️ 긴 글 분석, 보고서 작문, 독후감 및 논술 과제",
+            "📐 수학 문제 풀이, 교과 개념 이해 및 오답 노트 과제",
+            "🎨 발표용 슬라이드(PPT), 카드뉴스, 인포그래픽 시각화 작업",
+            "🌐 영어/외국어 독해, 회화, 영작문 및 번역 과제",
+            "💻 코딩, 프로그래밍, 알고리즘 및 정보 교과 실습 과제"
         ],
         key="task_type_select"
     )
@@ -282,7 +285,7 @@ with tab2:
         with col_img:
             st.image(LOGOS["ChatGPT"], width=45)
         with col_txt:
-            st.markdown("**ChatGPT (챗GPT)**\n- 개념 요약, 아이디어 발상, 교과 내용 풀이 등 만능으로 활용하기 좋은 대표 AI입니다.")
+            st.markdown("**ChatGPT (챗GPT)**\n- 개념 요약, 아이디어 발상, 독후감 개요 작성 등 만능으로 활용하기 좋은 대표 AI입니다.")
         st.divider()
 
         # NotebookLM
@@ -291,14 +294,32 @@ with tab2:
             st.image(LOGOS["NotebookLM"], width=45)
         with col_txt:
             st.markdown("**NotebookLM (노트북LM)**\n- 내 교과서나 PDF 자료만 업로드하면 거짓말 없이 정확하게 가르쳐주는 나만의 맞춤형 학습 조교입니다.")
-        st.divider()
 
+    elif "📐" in task_type:
+        st.markdown("### 🏆 추천 AI 도구 목록")
+        
         # QANDA
         col_img, col_txt = st.columns([1, 10])
         with col_img:
             st.image(LOGOS["QANDA"], width=45)
         with col_txt:
-            st.markdown("**QANDA (콴다)**\n- 수학 문제 풀이, 오답 원인 분석 및 교과 개념 해설에 특화된 학습 도구입니다.")
+            st.markdown("**QANDA (콴다)**\n- 수학 문제 사진 촬영 후 풀이 과정 확인, 오답 원인 분석 및 유사 문제 추천에 특화된 학습 도구입니다.")
+        st.divider()
+
+        # ChatGPT
+        col_img, col_txt = st.columns([1, 10])
+        with col_img:
+            st.image(LOGOS["ChatGPT"], width=45)
+        with col_txt:
+            st.markdown("**ChatGPT (챗GPT)**\n- 수학 공식의 원리와 단계별 풀이 과정을 친절하게 해설해 주는 만능 선생님 역할을 합니다.")
+        st.divider()
+
+        # NotebookLM
+        col_img, col_txt = st.columns([1, 10])
+        with col_img:
+            st.image(LOGOS["NotebookLM"], width=45)
+        with col_txt:
+            st.markdown("**NotebookLM (노트북LM)**\n- 학교 수학 학습지나 프린트 PDF를 올리면 내 교재 기반의 개념 요약과 오답 분석을 제공합니다.")
 
     elif "🎨" in task_type:
         st.markdown("### 🏆 추천 AI 도구 목록")
@@ -317,6 +338,50 @@ with tab2:
             st.image(LOGOS["Gamma"], width=45)
         with col_txt:
             st.markdown("**Gamma (감마)**\n- 한 줄 프롬프트만 입력하면 멋진 발표용 슬라이드(PPT)를 단 1분 만에 자동으로 제작해 줍니다.")
+
+    elif "🌐" in task_type:
+        st.markdown("### 🏆 추천 AI 도구 목록")
+        
+        # Claude
+        col_img, col_txt = st.columns([1, 10])
+        with col_img:
+            st.image(LOGOS["Claude"], width=45)
+        with col_txt:
+            st.markdown("**Claude (클로드)**\n- 가장 원어민스럽고 자연스러운 뉘앙스의 영작문 교정 및 긴 원서 독해 해설을 제공합니다.")
+        st.divider()
+
+        # ChatGPT
+        col_img, col_txt = st.columns([1, 10])
+        with col_img:
+            st.image(LOGOS["ChatGPT"], width=45)
+        with col_txt:
+            st.markdown("**ChatGPT (챗GPT)**\n- 영어 회화 롤플레잉 연습, 문법 오류 수정, 어휘 설명에 우수한 외국어 학습 파트너입니다.")
+        st.divider()
+
+        # Gemini
+        col_img, col_txt = st.columns([1, 10])
+        with col_img:
+            st.image(LOGOS["Gemini"], width=45)
+        with col_txt:
+            st.markdown("**Google Gemini (제미나이)**\n- 다국어 번역 및 문화적 맥락을 고려한 외국어 자료 해석에 우수합니다.")
+
+    elif "💻" in task_type:
+        st.markdown("### 🏆 추천 AI 도구 목록")
+        
+        # Claude
+        col_img, col_txt = st.columns([1, 10])
+        with col_img:
+            st.image(LOGOS["Claude"], width=45)
+        with col_txt:
+            st.markdown("**Claude (클로드)**\n- 복잡한 코드 오류(디버깅) 원인을 친절하게 설명하고 깔끔한 알고리즘 코드를 작성해 줍니다.")
+        st.divider()
+
+        # ChatGPT
+        col_img, col_txt = st.columns([1, 10])
+        with col_img:
+            st.image(LOGOS["ChatGPT"], width=45)
+        with col_txt:
+            st.markdown("**ChatGPT (챗GPT)**\n- 파이썬, HTML, C언어 등 정보 교과 실습 과제의 기초 코드 작성과 주석 해설에 유용합니다.")
 
 # ---------------------------------------------------------
 # 3단계: 프롬프트
