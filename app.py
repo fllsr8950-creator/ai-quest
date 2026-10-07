@@ -2,30 +2,93 @@ import streamlit as st
 import random
 
 st.set_page_config(
-    page_title="AI 100% 진짜 활용법 - Self-Guided Quest",
+    page_title="2026CJU 중고생 AI 100% 진짜 활용법",
+    page_icon="🤖",
     layout="wide"
 )
 
-# Custom Styling
+# Custom Styling (Light & Dark Mode compatible + Mobile Responsive)
 st.markdown("""
 <style>
-    .main-title { font-size: 2.2rem; font-weight: 800; color: #1E3A8A; text-align: center; margin-bottom: 0.3rem; }
-    .sub-title { font-size: 1.05rem; color: #4B5563; text-align: center; margin-bottom: 1.5rem; }
-    .bridge-box { background-color: #EFF6FF; border-left: 5px solid #2563EB; padding: 1.2rem; border-radius: 8px; margin-top: 1.5rem; }
+    /* Responsive Title styling for Light & Dark mode */
+    .main-title {
+        font-size: 2rem;
+        font-weight: 800;
+        text-align: center;
+        margin-bottom: 0.3rem;
+    }
+    .sub-title {
+        font-size: 1rem;
+        text-align: center;
+        margin-bottom: 1.5rem;
+        opacity: 0.85;
+    }
+    
+    /* Bridge Box styling compatible with Light & Dark Mode */
+    .bridge-box {
+        background-color: rgba(37, 99, 235, 0.12);
+        border-left: 5px solid #2563EB;
+        padding: 1.2rem;
+        border-radius: 8px;
+        margin-top: 1.5rem;
+    }
+    .bridge-box h4 {
+        color: #2563EB !important;
+        margin-top: 0;
+        margin-bottom: 0.5rem;
+        font-weight: 700;
+    }
+    
+    /* Mobile-friendly text wrapping & button styling */
+    .stRadio label, div[role="radiogroup"] label {
+        white-space: normal !important;
+        word-break: break-word !important;
+        line-height: 1.5 !important;
+        font-size: 1rem !important;
+    }
+    .stButton > button {
+        white-space: normal !important;
+        word-break: break-word !important;
+        width: 100% !important;
+    }
+    div[data-testid="stMarkdownContainer"] {
+        word-break: break-word !important;
+    }
 </style>
 """, unsafe_allow_html=True)
 
-st.markdown("<div class='main-title'>중고생을 위한 AI 100% 진짜 활용법</div>", unsafe_allow_html=True)
-st.markdown("<div class='sub-title'>1단계(한계 진단) -> 2단계(AI 선택) -> 3단계(프롬프트)</div>", unsafe_allow_html=True)
-
-if 'completed_stages' not in st.session_state:
-    st.session_state.completed_stages = []
+# ---------------------------------------------------------
+# State Management & Progress Calculation (Top of Script)
+# ---------------------------------------------------------
 if 'solved_cases_count' not in st.session_state:
     st.session_state.solved_cases_count = 0
 
-progress = len(st.session_state.completed_stages) / 3.0
-st.progress(min(progress, 1.0))
-st.caption(f"전체 퀘스트 달성도: {int(min(progress, 1.0) * 100)}% ({len(st.session_state.completed_stages)}/3 단계 완료)")
+# Calculate completed stages upfront before rendering header
+completed = []
+
+# Stage 1: solved at least once
+if st.session_state.get('stage1_done', False) or st.session_state.solved_cases_count > 0:
+    completed.append(1)
+
+# Stage 2: user selected a task type
+if st.session_state.get('task_type_select', '선택하세요') != '선택하세요':
+    completed.append(2)
+
+# Stage 3: user checked all 3 checkboxes
+if (st.session_state.get('chk1', False) and 
+    st.session_state.get('chk2', False) and 
+    st.session_state.get('chk3', False)):
+    completed.append(3)
+
+st.session_state.completed_stages = completed
+
+# Header
+st.markdown("<div class='main-title'>[2026CJU] 중고생을 위한 AI 100% 진짜 활용법</div>", unsafe_allow_html=True)
+st.markdown("<div class='sub-title'>1단계(한계 진단) -> 2단계(AI 선택) -> 3단계(프롬프트)</div>", unsafe_allow_html=True)
+
+progress_ratio = len(st.session_state.completed_stages) / 3.0
+st.progress(min(progress_ratio, 1.0))
+st.caption(f"전체 퀘스트 달성도: {int(min(progress_ratio, 1.0) * 100)}% ({len(st.session_state.completed_stages)}/3 단계 완료)")
 
 tab1, tab2, tab3 = st.tabs([
     "1단계: AI 오류 찾기", 
@@ -37,13 +100,13 @@ tab1, tab2, tab3 = st.tabs([
 # 무한 문제 조합 생성기
 # ---------------------------------------------------------
 figures = [
-    ("김수찬", "1446년 훈민정음 반포", "조선 시대"),
-    ("김동영", "1592년 한산도 대첩", "조선 임진왜란"),
-    ("김수아", "1905년 상대성 이론 발표", "20세기 초"),
-    ("김수아", "1503년 모나리자 제작", "르네상스 시대"),
-    ("박희찬", "1919년 대한민국 임시정부 수립", "일제강점기"),
-    ("이민규", "1610년 망원경 천체 관측", "17세기"),
-    ("김수아", "1796년 수원화성 거중기 사용", "조선 후기")
+    ("세종대왕", "1446년 훈민정음 반포", "조선 시대"),
+    ("이순신 장군", "1592년 한산도 대첩", "조선 임진왜란"),
+    ("아인슈타인", "1905년 상대성 이론 발표", "20세기 초"),
+    ("레오나르도 다빈치", "1503년 모나리자 제작", "르네상스 시대"),
+    ("김구 선생", "1919년 대한민국 임시정부 수립", "일제강점기"),
+    ("갈릴레오 갈릴레이", "1610년 망원경 천체 관측", "17세기"),
+    ("정약용 선생", "1796년 수원화성 거중기 사용", "조선 후기")
 ]
 
 anachronisms = [
@@ -94,32 +157,38 @@ with tab1:
     if 'current_case' not in st.session_state:
         st.session_state.current_case = generate_infinite_case()
         
-    col_a, col_b = st.columns([3, 1])
-    with col_b:
-        if st.button("새로운 문제 받기"):
-            st.session_state.current_case = generate_infinite_case()
-            st.rerun()
-            
     c = st.session_state.current_case
     
-    st.warning(f"AI가 작성한 문장: \"{c['claim']}\"")
+    if st.button("새로운 문제 받기", key="btn_new_case"):
+        st.session_state.current_case = generate_infinite_case()
+        st.rerun()
+            
+    st.warning(f"AI가 작성한 문장:\n\n\"{c['claim']}\"")
     
     with st.expander("배경지식이 없는데 어떻게 검증하나요? (팩트체크 힌트)"):
         st.markdown(c['hint'])
         
     user_ans = st.radio(
         "이 AI 문장은 참일까요, 거짓일까요?",
-        ["① 참 (실제 일어난 사실이다)", "② 거짓 (AI가 연도를 조작한 거짓 정보이다)"],
+        [
+            "① 참 (실제 일어난 사실이다)", 
+            "② 거짓 (AI가 연도를 조작한 거짓 정보이다)"
+        ],
         index=None,
         key=f"radio_{hash(c['claim'])}"
     )
     
     if user_ans:
         if "②" in user_ans:
+            st.session_state.stage1_done = True
             st.success(c['explanation'])
-            if 1 not in st.session_state.completed_stages:
-                st.session_state.completed_stages.append(1)
-            st.session_state.solved_cases_count += 1
+            
+            # Increment count if not already counted for this case
+            if st.session_state.get('last_solved_claim') != c['claim']:
+                st.session_state.solved_cases_count += 1
+                st.session_state.last_solved_claim = c['claim']
+                st.rerun()
+                
             st.metric("내 누적 오류 적발 건수", f"{st.session_state.solved_cases_count}건 성공!")
             
             st.markdown("""
@@ -147,7 +216,8 @@ with tab2:
             "최신 정보, 뉴스, 논문 출처와 팩트 검증이 핵심인 과제",
             "수식이 들어간 수학 오답 분석, 교과서 개념 요약 및 논리적 보고서",
             "발표용 슬라이드, 카드뉴스, 인포그래픽 시각화 작업"
-        ]
+        ],
+        key="task_type_select"
     )
     
     if "최신 정보" in task_type:
@@ -155,19 +225,16 @@ with tab2:
         ### 추천 AI: **Perplexity / Gemini**
         - **선택 이유**: 실시간 웹 검색 연동 및 각 문장마다 출처(URL)를 직접 달아주므로, 1단계처럼 수동 검색할 필요 없이 출처 클릭 한 번으로 검증 끝!
         """)
-        if 2 not in st.session_state.completed_stages: st.session_state.completed_stages.append(2)
     elif "수식이 들어간" in task_type:
         st.markdown("""
         ### 추천 AI: **ChatGPT / Claude**
         - **선택 이유**: 긴 문맥 이해와 논리적 추론 능력이 뛰어납니다. 개념을 쉽게 풀어서 설명하거나 보고서 개요를 잡을 때 가장 우수합니다.
         """)
-        if 2 not in st.session_state.completed_stages: st.session_state.completed_stages.append(2)
     elif "발표용" in task_type:
         st.markdown("""
         ### 추천 AI: **Canva AI**
         - **선택 이유**: 단순 글자가 아니라 인포그래픽, 카드뉴스 등 시각적 디자인 템플릿을 자동으로 배치해 주어 발표 자료 제작 시간을 단축합니다.
         """)
-        if 2 not in st.session_state.completed_stages: st.session_state.completed_stages.append(2)
 
 # ---------------------------------------------------------
 # 3단계: 프롬프트
@@ -179,9 +246,9 @@ with tab3:
     col1, col2 = st.columns(2)
     with col1:
         st.markdown("#### 1. AI 맞춤 질문(프롬프트) 조립기")
-        role = st.text_input("AI의 캐릭터 / 직업 (어떤 역할로 답해줄까요?)", "친절한 고등학교 정보 선생님")
-        topic = st.text_input("내가 궁금한 주제/과제", "인공지능 윤리와 저작권 문제")
-        constraint = st.text_input("꼭 지켜야 할 약속/조건", "초등학생도 이해할 쉬운 단어로 3가지 요약")
+        role = st.text_input("AI의 캐릭터 / 직업 (어떤 역할로 답해줄까요?)", "친절한 고등학교 정보 선생님", key="role_input")
+        topic = st.text_input("내가 궁금한 주제/과제", "인공지능 윤리와 저작권 문제", key="topic_input")
+        constraint = st.text_input("꼭 지켜야 할 약속/조건", "초등학생도 이해할 쉬운 단어로 3가지 요약", key="constraint_input")
         
         format_out = st.selectbox(
             "원하는 답변 모양 선택하기", 
@@ -190,7 +257,8 @@ with tab3:
                 "발표 대본 / 친근한 수다 말투 (~했단다, ~해요)",
                 "한눈에 비교하는 정돈된 표",
                 "학교 수행평가 제출용 깔끔한 줄글 설명문"
-            ]
+            ],
+            key="format_select"
         )
         
         generated_prompt = f"당신은 [{role}]입니다. [{topic}]에 대해 알려주세요.\n\n[약속/조건]: {constraint}\n[답변 모양]: {format_out} 형태로 작성해 주세요."
@@ -198,12 +266,10 @@ with tab3:
         
     with col2:
         st.markdown("#### 2. 최종 제출 전 3단계 팩트체크 체크리스트")
-        chk1 = st.checkbox("1단계: 출처 체크 (숫자, 날짜, 인명을 포털에서 직접 대조해 보았나요?)")
-        chk2 = st.checkbox("2단계: 도구 체크 (과제 성격에 맞는 최적의 AI를 사용하였나요?)")
-        chk3 = st.checkbox("3단계: 내 글로 재구성 (AI 답변을 그대로 복사하지 않고 내 언어로 바꿨나요?)")
+        chk1 = st.checkbox("1단계: 출처 체크 (숫자, 날짜, 인명을 포털에서 직접 대조해 보았나요?)", key="chk1")
+        chk2 = st.checkbox("2단계: 도구 체크 (과제 성격에 맞는 최적의 AI를 사용하였나요?)", key="chk2")
+        chk3 = st.checkbox("3단계: 내 글로 재구성 (AI 답변을 그대로 복사하지 않고 내 언어로 바꿨나요?)", key="chk3")
         
         if chk1 and chk2 and chk3:
             st.balloons()
             st.success("축하합니다! AI를 100% 주도적으로 컨트롤하는 스마트 AI 리터러시 마스터 과정을 완수하셨습니다!")
-            if 3 not in st.session_state.completed_stages:
-                st.session_state.completed_stages.append(3)
