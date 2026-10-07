@@ -17,7 +17,7 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-st.markdown("<div class='main-title'>🚀 중고생을 위한 AI 100% 진짜 활용법</div>", unsafe_allow_html=True)
+st.markdown("<div class='main-title'> 중고생을 위한 AI 100% 진짜 활용법</div>", unsafe_allow_html=True)
 st.markdown("<div class='sub-title'>수준별 자유 선택: Stage 1(한계 진단) ➔ Stage 2(AI 선택) ➔ Stage 3(프롬프트 & 검증)</div>", unsafe_allow_html=True)
 
 if 'completed_stages' not in st.session_state:
@@ -27,12 +27,12 @@ if 'solved_cases_count' not in st.session_state:
 
 progress = len(st.session_state.completed_stages) / 3.0
 st.progress(min(progress, 1.0))
-st.caption(f"🎯 전체 퀘스트 달성도: {int(min(progress, 1.0) * 100)}% ({len(st.session_state.completed_stages)}/3 단계 완료)")
+st.caption(f" 전체 달성도: {int(min(progress, 1.0) * 100)}% ({len(st.session_state.completed_stages)}/3 단계 완료)")
 
 tab1, tab2, tab3 = st.tabs([
-    "🕵️ Stage 1: AI 오류 수사대 (입문)", 
-    "🎯 Stage 2: 과제별 AI Pick (도구 선택)", 
-    "⚡ Stage 3: 프롬프트 & 팩트체크 (실전 응용)"
+    "🕵️ Stage 1: AI 오류확인 ", 
+    "🎯 Stage 2: 과제별 AI 선택 ", 
+    "⚡ Stage 3: 프롬프트 (실전 응용)"
 ])
 
 # ---------------------------------------------------------
@@ -81,7 +81,7 @@ def generate_infinite_case():
 # STAGE 1: AI 오류 수사대
 # ---------------------------------------------------------
 with tab1:
-    st.subheader("🕵️ Stage 1: AI 오류 수사대 (오류 검증 입문)")
+    st.subheader(" Stage 1: AI 오류확인 (오류 검증 입문)")
     
     # --- 건너뛰기 패스 기능 ---
     st.markdown("""
@@ -106,13 +106,13 @@ with tab1:
         
     col_a, col_b = st.columns([3, 1])
     with col_b:
-        if st.button("🎲 새로운 사건 받기 (무한)"):
+        if st.button(" 새로운 사건 받기 "):
             st.session_state.current_case = generate_infinite_case()
             st.rerun()
             
     c = st.session_state.current_case
     
-    st.warning(f"🤖 **AI가 생성한 사건 보고서**: \"{c['claim']}\"")
+    st.warning(f" **AI가 생성한 사건 보고서**: \"{c['claim']}\"")
     
     with st.expander("🔍 배경지식이 없는데 어떻게 검증하나요? (팩트체크 힌트)"):
         st.markdown(c['hint'])
@@ -130,7 +130,7 @@ with tab1:
             if 1 not in st.session_state.completed_stages:
                 st.session_state.completed_stages.append(1)
             st.session_state.solved_cases_count += 1
-            st.metric("🕵️ 내 누적 오류 적발 건수", f"{st.session_state.solved_cases_count}건 성공!")
+            st.metric(" 내 누적 오류 적발 건수", f"{st.session_state.solved_cases_count}건 성공!")
             
             st.markdown("""
             <div class='bridge-box'>
@@ -147,7 +147,7 @@ with tab1:
 # STAGE 2: 과제별 AI Pick
 # ---------------------------------------------------------
 with tab2:
-    st.subheader("🎯 Stage 2: 상황별 AI 골라쓰기 (시간 절약 10배 전략)")
+    st.subheader(" Stage 2: 상황별 AI 골라쓰기 (시간 절약 10배 전략)")
     st.info("💡 **왜 Stage 2가 필요한가요?** 1단계처럼 매번 일일이 팩트체크하기 귀찮죠? 과제 특성에 맞는 최적의 AI를 고르면 거짓말 확률이 극적으로 낮아집니다!")
     
     task_type = st.selectbox(
