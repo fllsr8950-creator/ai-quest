@@ -94,7 +94,7 @@ IMAGE_FILES = {
 
 def render_ai_card(name, key, description):
     filename = IMAGE_FILES.get(key, "")
-    col_img, col_txt = st.columns()
+    col_img, col_txt = st.columns([1, 6])
     
     with col_img:
         if filename and os.path.exists(filename):
