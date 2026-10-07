@@ -125,18 +125,18 @@ subjects = [
 
 def generate_infinite_case():
     selected_fig = random.choice(figures)
-    fig = selected_fig[0] if len(selected_fig) > 0 else "세종대왕"
-    fig_fact = selected_fig[1] if len(selected_fig) > 1 else "역사적 사건"
-    fig_era = selected_fig[2] if len(selected_fig) > 2 else "조선시대"
+    fig = selected_fig if len(selected_fig) > 0 else "세종대왕"
+    fig_fact = selected_fig if len(selected_fig) > 1 else "역사적 사건"
+    fig_era = selected_fig if len(selected_fig) > 2 else "조선시대"
     
     selected_ana = random.choice(anachronisms)
-    ana = selected_ana[0] if len(selected_ana) > 0 else "스마트폰 사용"
-    ana_fact = selected_ana[1] if len(selected_ana) > 1 else "2000년대 기술"
+    ana = selected_ana if len(selected_ana) > 0 else "스마트폰 사용"
+    ana_fact = selected_ana if len(selected_ana) > 1 else "2000년대 기술"
     
     subj = random.choice(subjects)
     
     claim = f"{fig_era} {fig}({fig_fact})은 {subj} 중 효율성을 높이기 위해 {ana}했다."
-    hint = f"팩트체크 힌트: 포털에 [{fig} 활동 시기]와 [{ana_fact.split()[0] if ana_fact.split() else ana_fact} 시기]를 각각 검색해 연도를 대조해 보세요!"
+    hint = f"팩트체크 힌트: 포털에 [{fig} 활동 시기]와 [{ana_fact.split() if ana_fact.split() else ana_fact} 시기]를 각각 검색해 연도를 대조해 보세요!"
     explanation = f"거짓 적발 성공!\n{fig}의 활동 시기와 {ana_fact}의 연도는 서로 맞지 않습니다. 이처럼 AI는 연도와 문맥을 조합해 그럴듯한 거짓 정보를 만듭니다."
     
     return {
@@ -203,8 +203,20 @@ with tab1:
             st.error("다시 검증해 보세요! 힌트를 참고하여 두 연도가 일치하는지 확인해 보세요.")
 
 # ---------------------------------------------------------
-# 2단계: 과제별 AI 선택
+# 2단계: 과제별 AI 선택 (Logos & All Added AIs)
 # ---------------------------------------------------------
+LOGOS = {
+    "Claude": "https://upload.wikimedia.org/wikipedia/commons/7/70/Claude_AI_logo.svg",
+    "ChatGPT": "https://upload.wikimedia.org/wikipedia/commons/0/04/ChatGPT_logo.svg",
+    "Gemini": "https://upload.wikimedia.org/wikipedia/commons/8/8a/Google_Gemini_logo.svg",
+    "Perplexity": "https://upload.wikimedia.org/wikipedia/commons/1/1d/Perplexity_AI_logo.svg",
+    "Canva": "https://upload.wikimedia.org/wikipedia/commons/0/08/Canva_icon_2021.svg",
+    "NotebookLM": "https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg",
+    "QANDA": "https://qanda.ai/favicon.ico",
+    "Gamma": "https://gamma.app/favicon.ico",
+    "Liner": "https://getliner.com/favicon.ico"
+}
+
 with tab2:
     st.subheader("2단계: 과제별 AI 선택")
     st.info("왜 2단계가 필요한가요? 1단계처럼 매번 일일이 팩트체크하기 귀찮죠? 과제 특성에 맞는 최적의 AI를 고르면 거짓말 확률이 극적으로 낮아집니다!")
@@ -213,28 +225,90 @@ with tab2:
         "내가 진행하려는 과제 성격은 무엇인가요?",
         [
             "선택하세요",
-            "최신 정보, 뉴스, 논문 출처와 팩트 검증이 핵심인 과제",
-            "수식이 들어간 수학 오답 분석, 교과서 개념 요약 및 논리적 보고서",
-            "발표용 슬라이드, 카드뉴스, 인포그래픽 시각화 작업"
+            "🔍 최신 정보, 뉴스, 논문 출처와 팩트 검증이 핵심인 과제",
+            "✍️ 긴 글 분석, 보고서 작문, 교과서 개념 및 수학 오답 풀이 과제",
+            "🎨 발표용 슬라이드(PPT), 카드뉴스, 인포그래픽 시각화 작업"
         ],
         key="task_type_select"
     )
     
-    if "최신 정보" in task_type:
-        st.markdown("""
-        ### 추천 AI: **Perplexity / Gemini**
-        - **선택 이유**: 실시간 웹 검색 연동 및 각 문장마다 출처(URL)를 직접 달아주므로, 1단계처럼 수동 검색할 필요 없이 출처 클릭 한 번으로 검증 끝!
-        """)
-    elif "수식이 들어간" in task_type:
-        st.markdown("""
-        ### 추천 AI: **ChatGPT / Claude**
-        - **선택 이유**: 긴 문맥 이해와 논리적 추론 능력이 뛰어납니다. 개념을 쉽게 풀어서 설명하거나 보고서 개요를 잡을 때 가장 우수합니다.
-        """)
-    elif "발표용" in task_type:
-        st.markdown("""
-        ### 추천 AI: **Canva AI**
-        - **선택 이유**: 단순 글자가 아니라 인포그래픽, 카드뉴스 등 시각적 디자인 템플릿을 자동으로 배치해 주어 발표 자료 제작 시간을 단축합니다.
-        """)
+    if "🔍" in task_type:
+        st.markdown("### 🏆 추천 AI 도구 목록")
+        
+        # Perplexity
+        col_img, col_txt = st.columns([1, 2])
+        with col_img:
+            st.image(LOGOS["Perplexity"], width=45)
+        with col_txt:
+            st.markdown("**Perplexity (퍼플렉시티)**\n- 실시간 웹 검색 연동 및 문장마다 출처(URL)를 직접 달아주어 팩트체크 수고를 90% 줄여줍니다.")
+        st.divider()
+        
+        # Gemini
+        col_img, col_txt = st.columns([1, 2])
+        with col_img:
+            st.image(LOGOS["Gemini"], width=45)
+        with col_txt:
+            st.markdown("**Google Gemini (제미나이)**\n- 구글 검색 생태계와 결합하여 최신 정보 탐색 및 이미지/문서 분석에 우수합니다.")
+        st.divider()
+
+        # Liner
+        col_img, col_txt = st.columns([1, 2])
+        with col_img:
+            st.image(LOGOS["Liner"], width=45)
+        with col_txt:
+            st.markdown("**Liner (라이너)**\n- 신뢰성 높은 학술 자료와 웹 정보를 하이라이팅하며 정확하게 탐색해 줍니다.")
+
+    elif "✍️" in task_type:
+        st.markdown("### 🏆 추천 AI 도구 목록")
+        
+        # Claude
+        col_img, col_txt = st.columns([1, 2])
+        with col_img:
+            st.image(LOGOS["Claude"], width=45)
+        with col_txt:
+            st.markdown("**Claude (클로드)**\n- 방대한 분량의 긴 글과 논문 분석, 자연스러운 보고서 작문 및 논리적 텍스트 생성에 가장 탁월합니다.")
+        st.divider()
+
+        # ChatGPT
+        col_img, col_txt = st.columns([1, 2])
+        with col_img:
+            st.image(LOGOS["ChatGPT"], width=45)
+        with col_txt:
+            st.markdown("**ChatGPT (챗GPT)**\n- 개념 요약, 아이디어 발상, 교과 내용 풀이 등 만능으로 활용하기 좋은 대표 AI입니다.")
+        st.divider()
+
+        # NotebookLM
+        col_img, col_txt = st.columns([1, 2])
+        with col_img:
+            st.image(LOGOS["NotebookLM"], width=45)
+        with col_txt:
+            st.markdown("**NotebookLM (노트북LM)**\n- 내 교과서나 PDF 자료만 업로드하면 거짓말 없이 정확하게 가르쳐주는 나만의 맞춤형 학습 조교입니다.")
+        st.divider()
+
+        # QANDA
+        col_img, col_txt = st.columns([1, 2])
+        with col_img:
+            st.image(LOGOS["QANDA"], width=45)
+        with col_txt:
+            st.markdown("**QANDA (콴다)**\n- 수학 문제 풀이, 오답 원인 분석 및 교과 개념 해설에 특화된 학습 도구입니다.")
+
+    elif "🎨" in task_type:
+        st.markdown("### 🏆 추천 AI 도구 목록")
+        
+        # Canva
+        col_img, col_txt = st.columns([1, 2])
+        with col_img:
+            st.image(LOGOS["Canva"], width=45)
+        with col_txt:
+            st.markdown("**Canva AI (캔바)**\n- 발표용 카드뉴스, 인포그래픽, 포스터 시각화 디자인 템플릿을 자동으로 완성해 줍니다.")
+        st.divider()
+
+        # Gamma
+        col_img, col_txt = st.columns([1, 2])
+        with col_img:
+            st.image(LOGOS["Gamma"], width=45)
+        with col_txt:
+            st.markdown("**Gamma (감마)**\n- 한 줄 프롬프트만 입력하면 멋진 발표용 슬라이드(PPT)를 단 1분 만에 자동으로 제작해 줍니다.")
 
 # ---------------------------------------------------------
 # 3단계: 프롬프트
