@@ -211,7 +211,7 @@ with tab1:
             st.error("다시 검증해 보세요! 힌트를 참고하여 두 연도가 일치하는지 확인해 보세요.")
 
 # ---------------------------------------------------------
-# 2단계: 과제별 AI 선택 (Logos & Detailed Roles)
+# 2단계: 과제별 AI 선택 (Distinct & High Quality Icons)
 # ---------------------------------------------------------
 LOGOS = {
     "Claude": "https://upload.wikimedia.org/wikipedia/commons/7/70/Claude_AI_logo.svg",
@@ -219,12 +219,12 @@ LOGOS = {
     "Gemini": "https://upload.wikimedia.org/wikipedia/commons/8/8a/Google_Gemini_logo.svg",
     "Perplexity": "https://upload.wikimedia.org/wikipedia/commons/1/1d/Perplexity_AI_logo.svg",
     "Canva": "https://upload.wikimedia.org/wikipedia/commons/0/08/Canva_icon_2021.svg",
-    "NotebookLM": "https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg",
-    "QANDA": "https://qanda.ai/favicon.ico",
-    "Gamma": "https://gamma.app/favicon.ico",
-    "Liner": "https://getliner.com/favicon.ico",
-    "ThetaWaveAI": "https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg",
-    "UnivAI": "https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg"
+    "NotebookLM": "https://api.iconify.design/fluent-emoji-flat:notebook-with-decorative-cover.svg",
+    "QANDA": "https://api.iconify.design/fluent-emoji-flat:keycap-1234.svg",
+    "Gamma": "https://api.iconify.design/fluent-emoji-flat:sparkles.svg",
+    "Liner": "https://api.iconify.design/fluent-emoji-flat:highlighter.svg",
+    "ThetaWaveAI": "https://api.iconify.design/fluent-emoji-flat:brain.svg",
+    "UnivAI": "https://api.iconify.design/fluent-emoji-flat:graduation-cap.svg"
 }
 
 with tab2:
@@ -250,7 +250,7 @@ with tab2:
         st.markdown("### 🏆 추천 AI 도구 목록")
         
         # Perplexity
-        col_img, col_txt = st.columns([1, 11])
+        col_img, col_txt = st.columns([1, 12])
         with col_img:
             st.image(LOGOS["Perplexity"], width=45)
         with col_txt:
@@ -258,7 +258,7 @@ with tab2:
         st.divider()
 
         # Liner AI
-        col_img, col_txt = st.columns([1, 11])
+        col_img, col_txt = st.columns([1, 12])
         with col_img:
             st.image(LOGOS["Liner"], width=45)
         with col_txt:
@@ -266,7 +266,7 @@ with tab2:
         st.divider()
         
         # Gemini
-        col_img, col_txt = st.columns([1, 11])
+        col_img, col_txt = st.columns([1, 12])
         with col_img:
             st.image(LOGOS["Gemini"], width=45)
         with col_txt:
@@ -276,7 +276,7 @@ with tab2:
         st.markdown("### 🏆 추천 AI 도구 목록")
         
         # NotebookLM
-        col_img, col_txt = st.columns([1, 11])
+        col_img, col_txt = st.columns([1, 12])
         with col_img:
             st.image(LOGOS["NotebookLM"], width=45)
         with col_txt:
@@ -284,7 +284,7 @@ with tab2:
         st.divider()
 
         # ThetaWaveAI
-        col_img, col_txt = st.columns([1, 11])
+        col_img, col_txt = st.columns([1, 12])
         with col_img:
             st.image(LOGOS["ThetaWaveAI"], width=45)
         with col_txt:
@@ -292,7 +292,7 @@ with tab2:
         st.divider()
 
         # UnivAI
-        col_img, col_txt = st.columns([1, 11])
+        col_img, col_txt = st.columns([1, 12])
         with col_img:
             st.image(LOGOS["UnivAI"], width=45)
         with col_txt:
@@ -302,7 +302,7 @@ with tab2:
         st.markdown("### 🏆 추천 AI 도구 목록")
         
         # Claude
-        col_img, col_txt = st.columns([1, 11])
+        col_img, col_txt = st.columns([1, 12])
         with col_img:
             st.image(LOGOS["Claude"], width=45)
         with col_txt:
@@ -310,7 +310,7 @@ with tab2:
         st.divider()
 
         # ChatGPT
-        col_img, col_txt = st.columns([1, 11])
+        col_img, col_txt = st.columns([1, 12])
         with col_img:
             st.image(LOGOS["ChatGPT"], width=45)
         with col_txt:
@@ -320,7 +320,7 @@ with tab2:
         st.markdown("### 🏆 추천 AI 도구 목록")
         
         # QANDA
-        col_img, col_txt = st.columns([1, 11])
+        col_img, col_txt = st.columns([1, 12])
         with col_img:
             st.image(LOGOS["QANDA"], width=45)
         with col_txt:
@@ -328,7 +328,7 @@ with tab2:
         st.divider()
 
         # ChatGPT
-        col_img, col_txt = st.columns([1, 11])
+        col_img, col_txt = st.columns([1, 12])
         with col_img:
             st.image(LOGOS["ChatGPT"], width=45)
         with col_txt:
@@ -338,7 +338,7 @@ with tab2:
         st.markdown("### 🏆 추천 AI 도구 목록")
         
         # Gamma
-        col_img, col_txt = st.columns([1, 11])
+        col_img, col_txt = st.columns([1, 12])
         with col_img:
             st.image(LOGOS["Gamma"], width=45)
         with col_txt:
@@ -346,7 +346,7 @@ with tab2:
         st.divider()
 
         # Canva
-        col_img, col_txt = st.columns([1, 11])
+        col_img, col_txt = st.columns([1, 12])
         with col_img:
             st.image(LOGOS["Canva"], width=45)
         with col_txt:
@@ -354,7 +354,7 @@ with tab2:
         st.divider()
 
         # NotebookLM
-        col_img, col_txt = st.columns([1, 11])
+        col_img, col_txt = st.columns([1, 12])
         with col_img:
             st.image(LOGOS["NotebookLM"], width=45)
         with col_txt:
@@ -364,7 +364,7 @@ with tab2:
         st.markdown("### 🏆 추천 AI 도구 목록")
         
         # Claude
-        col_img, col_txt = st.columns([1, 11])
+        col_img, col_txt = st.columns([1, 12])
         with col_img:
             st.image(LOGOS["Claude"], width=45)
         with col_txt:
@@ -372,7 +372,7 @@ with tab2:
         st.divider()
 
         # ChatGPT
-        col_img, col_txt = st.columns([1, 11])
+        col_img, col_txt = st.columns([1, 12])
         with col_img:
             st.image(LOGOS["ChatGPT"], width=45)
         with col_txt:
@@ -382,7 +382,7 @@ with tab2:
         st.markdown("### 🏆 추천 AI 도구 목록")
         
         # Claude
-        col_img, col_txt = st.columns([1, 11])
+        col_img, col_txt = st.columns([1, 12])
         with col_img:
             st.image(LOGOS["Claude"], width=45)
         with col_txt:
@@ -390,7 +390,7 @@ with tab2:
         st.divider()
 
         # ChatGPT
-        col_img, col_txt = st.columns([1, 11])
+        col_img, col_txt = st.columns([1, 12])
         with col_img:
             st.image(LOGOS["ChatGPT"], width=45)
         with col_txt:
