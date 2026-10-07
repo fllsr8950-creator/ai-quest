@@ -2,7 +2,7 @@ import streamlit as st
 import random
 
 st.set_page_config(
-    page_title="AI 100% 진짜 활용법을 우리가 왜 함?" - Self-Guided Quest",
+    page_title="AI 100% 진짜 활용법을 우리가 왜 함? - Self-Guided Quest",
     layout="wide"
 )
 
