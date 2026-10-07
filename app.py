@@ -2,8 +2,7 @@ import streamlit as st
 import random
 
 st.set_page_config(
-    page_title="AI 100% 진짜 활용법 - Self-Guided Quest",
-    page_icon="🤖",
+    page_title="AI 100% 진짜 활용법을 우리가 왜 함?" - Self-Guided Quest",
     layout="wide"
 )
 
@@ -30,9 +29,9 @@ st.progress(min(progress, 1.0))
 st.caption(f" 전체 달성도: {int(min(progress, 1.0) * 100)}% ({len(st.session_state.completed_stages)}/3 단계 완료)")
 
 tab1, tab2, tab3 = st.tabs([
-    "🕵️ Stage 1: AI 오류확인 ", 
-    "🎯 Stage 2: 과제별 AI 선택 ", 
-    "⚡ Stage 3: 프롬프트 (실전 응용)"
+    " Stage 1: AI 오류확인 ", 
+    " Stage 2: 과제별 AI 선택 ", 
+    " Stage 3: 프롬프트 (실전 응용)"
 ])
 
 # ---------------------------------------------------------
@@ -94,7 +93,7 @@ with tab1:
     if st.button("⏩ 난 이미 팩트체크 고수! Stage 1 건너뛰기"):
         if 1 not in st.session_state.completed_stages:
             st.session_state.completed_stages.append(1)
-        st.success("⚡ Stage 1 통과 완료! 상단의 [Stage 2: 과제별 AI Pick] 탭으로 이동하세요.")
+        st.success("⚡ Stage 1 통과 완료! 상단의 [Stage 2: 과제별 AI 선택] 탭으로 이동하세요.")
         st.rerun()
 
     st.markdown("""
