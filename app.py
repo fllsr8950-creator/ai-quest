@@ -1,7 +1,6 @@
 import streamlit as st
 import random
 import os
-import base64
 
 st.set_page_config(
     page_title="2026CJU 중고생 AI 100% 진짜 활용법",
@@ -9,7 +8,7 @@ st.set_page_config(
     layout="wide"
 )
 
-# Custom Styling (Light & Dark Mode compatible + Mobile Responsive)
+# Custom Styling (Mobile Responsive & Checkbox Wrapping Fix)
 st.markdown("""
 <style>
     .main-title {
@@ -37,6 +36,8 @@ st.markdown("""
         margin-bottom: 0.5rem;
         font-weight: 700;
     }
+    
+    /* Global Text Wrapping & Button styling */
     .stRadio label, div[role="radiogroup"] label {
         white-space: normal !important;
         word-break: break-word !important;
@@ -51,25 +52,19 @@ st.markdown("""
     div[data-testid="stMarkdownContainer"] {
         word-break: break-word !important;
     }
-    .ai-card-box {
-        display: flex;
-        align-items: center;
-        gap: 14px;
-        padding: 12px 16px;
-        border-radius: 12px;
-        background-color: rgba(128, 128, 128, 0.08);
-        border: 1px solid rgba(128, 128, 128, 0.18);
-        margin-bottom: 12px;
-    }
-    .ai-card-title {
-        font-size: 1.1rem;
-        font-weight: 700;
-        margin-bottom: 3px;
-    }
-    .ai-card-desc {
-        font-size: 0.95rem;
-        line-height: 1.45;
-        opacity: 0.9;
+    
+    /* 💥 CRITICAL FIX: Checkbox label text truncation fix for mobile screens */
+    div[data-testid="stCheckbox"] label, 
+    div[data-testid="stCheckbox"] label p,
+    div[data-testid="stCheckbox"] p,
+    .stCheckbox label,
+    .stCheckbox label p {
+        white-space: normal !important;
+        word-break: break-word !important;
+        overflow-wrap: break-word !important;
+        text-overflow: unset !important;
+        line-height: 1.4 !important;
+        font-size: 0.95rem !important;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -93,14 +88,13 @@ IMAGE_FILES = {
 
 def render_ai_card(name, key, description):
     filename = IMAGE_FILES.get(key, "")
-    col_img, col_txt = st.columns([1, 6])
+    col_img, col_txt = st.columns([1, 5])
     
     with col_img:
         if filename and os.path.exists(filename):
             st.image(filename, width=50)
         else:
-            # Fallback icon if file is not uploaded yet
-            st.markdown(f"### 🤖")
+            st.markdown("### 🤖")
             
     with col_txt:
         st.markdown(f"**{name}**\n\n{description}")
