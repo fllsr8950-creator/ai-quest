@@ -209,23 +209,6 @@ def render_ai_card(name, key, description):
     st.divider()
 
 # ---------------------------------------------------------
-# Callback Functions for Synced Inputs
-# ---------------------------------------------------------
-def update_length():
-    sel = st.session_state.length_select
-    if sel == "직접 입력":
-        st.session_state.length_text = ""
-    else:
-        st.session_state.length_text = sel
-
-def update_format():
-    sel = st.session_state.format_select
-    if sel == "직접 입력":
-        st.session_state.format_text = ""
-    else:
-        st.session_state.format_text = sel
-
-# ---------------------------------------------------------
 # Header & Subtitle
 # ---------------------------------------------------------
 st.markdown("<div class='main-title'>중고생 AI 100% 활용법</div>", unsafe_allow_html=True)
@@ -324,48 +307,29 @@ with tab_main:
         # 확실한 정보/출처 요구 옵션 체크박스
         include_source = st.checkbox("확실하지 않은 정보 추측 방지 및 출처 요구하기", key="chk_include_source")
 
-        # Session State Initialization for Synced Inputs
-        if "length_text" not in st.session_state:
-            st.session_state.length_text = "상세한 설명 (보고서/발표용)"
-            
-        if "format_text" not in st.session_state:
-            st.session_state.format_text = "1, 2, 3 번호로 핵심만 깔끔 요약"
-
-        # 답변 분량 선택 (추천 예시 드롭다운 + 연동 입력창)
-        st.selectbox(
-            "답변 분량 / 길이 선택 (추천 예시 선택 또는 직접 입력)",
+        # 답변 분량 선택 (한 칸에서 선택 OR 직접 입력)
+        length_out = st.selectbox(
+            "답변 분량 / 길이 선택 (목록 선택 또는 직접 입력)",
             [
                 "상세한 설명 (보고서/발표용)",
                 "보통 (1~2문단 분량)",
-                "한 줄 핵심 요약",
-                "직접 입력"
+                "한 줄 핵심 요약"
             ],
-            key="length_select",
-            on_change=update_length
-        )
-        length_out = st.text_input(
-            "답변 분량 내용 (자유롭게 입력/수정 가능):", 
-            key="length_text",
-            placeholder="예) 500자 내외로 상세하게 작성해 주세요."
+            accept_new_options=True,
+            key="length_select"
         )
 
-        # 답변 모양 선택 (추천 예시 드롭다운 + 연동 입력창)
-        st.selectbox(
-            "원하는 답변 모양 선택 (추천 예시 선택 또는 직접 입력)", 
+        # 답변 모양 선택 (한 칸에서 선택 OR 직접 입력)
+        format_out = st.selectbox(
+            "원하는 답변 모양 선택 (목록 선택 또는 직접 입력)", 
             [
                 "1, 2, 3 번호로 핵심만 깔끔 요약",
                 "발표 대본 / 친근한 수다 말투 (~했단다, ~해요)",
                 "한눈에 비교하는 정돈된 표",
-                "학교 수행평가 제출용 깔끔한 줄글 설명문",
-                "직접 입력"
+                "학교 수행평가 제출용 깔끔한 줄글 설명문"
             ],
-            key="format_select",
-            on_change=update_format
-        )
-        format_out = st.text_input(
-            "원하는 답변 모양 내용 (자유롭게 입력/수정 가능):", 
-            key="format_text",
-            placeholder="예) Q&A 인터뷰 형식으로 작성해 주세요."
+            accept_new_options=True,
+            key="format_select"
         )
 
         role_str = role if role else "전문가"
