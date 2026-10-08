@@ -8,9 +8,20 @@ st.set_page_config(
     layout="wide"
 )
 
-# Custom Styling (Mobile Responsive, Modern Card Design & Clean Badges)
+# Custom Styling (Mobile Responsive, Modern Card Design & Hide Streamlit Header/GitHub Logo)
 st.markdown("""
 <style>
+    /* Streamlit 상단 헤더(깃허브 로고 및 우측 메뉴)와 하단 푸터 완전히 숨기기 */
+    header[data-testid="stHeader"] {
+        display: none !important;
+    }
+    footer {
+        display: none !important;
+    }
+    #MainMenu {
+        visibility: hidden;
+    }
+
     .main-title {
         font-size: 2.1rem;
         font-weight: 800;
