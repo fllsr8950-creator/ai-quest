@@ -8,18 +8,34 @@ st.set_page_config(
     layout="wide"
 )
 
-# Custom Styling (Mobile Responsive, Modern Card Design & Hide Streamlit Header/GitHub Logo)
+# Custom Styling (Mobile Responsive, Modern Card Design & Completely Hide Streamlit Branding/Footer/Sailboat Logo)
 st.markdown("""
 <style>
-    /* Streamlit 상단 헤더(깃허브 로고 및 우측 메뉴)와 하단 푸터 완전히 숨기기 */
+    /* Streamlit 상단 헤더, 우측 메뉴, 하단 푸터 및 종이 돛단배(Streamlit 로고 배지) 완벽 숨기기 */
     header[data-testid="stHeader"] {
         display: none !important;
     }
-    footer {
+    footer, div[data-testid="stFooter"] {
         display: none !important;
     }
     #MainMenu {
-        visibility: hidden;
+        visibility: hidden !important;
+        display: none !important;
+    }
+    [data-testid="stToolbar"] {
+        display: none !important;
+    }
+    [data-testid="stDecoration"] {
+        display: none !important;
+    }
+    [data-testid="stStatusWidget"] {
+        display: none !important;
+    }
+    div[class*="viewerBadge"], [data-testid="stAppViewerFooter"], div[class*="stAppViewerFooter"] {
+        display: none !important;
+    }
+    a[href*="streamlit.io"] {
+        display: none !important;
     }
 
     .main-title {
@@ -353,13 +369,10 @@ subjects = [
 
 def generate_infinite_case():
     selected_fig = random.choice(figures)
-    fig = selected_fig[0]
-    fig_fact = selected_fig[1]
-    fig_era = selected_fig[2]
+    fig, fig_fact, fig_era = selected_fig
 
     selected_ana = random.choice(anachronisms)
-    ana = selected_ana[0]
-    ana_fact = selected_ana[1]
+    ana, ana_fact = selected_ana
 
     subj = random.choice(subjects)
 
