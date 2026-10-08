@@ -307,32 +307,50 @@ with tab_main:
         # 확실한 정보/출처 요구 옵션 체크박스
         include_source = st.checkbox("확실하지 않은 정보 추측 방지 및 출처 요구하기", key="chk_include_source")
 
-        # 답변 분량 선택 (한 칸에서 고르거나 직접 타이핑 가능)
-        length_out = st.selectbox(
-            "답변 분량 / 길이 (목록 선택 또는 직접 타이핑 가능)",
+        # 1) 답변 분량 선택 (목록에 '직접 입력' 추가 -> 클릭 시 타이핑 칸 등장)
+        length_choice = st.selectbox(
+            "답변 분량 / 길이 선택하기",
             [
                 "상세한 설명 (보고서/발표용)",
                 "보통 (1~2문단 분량)",
-                "한 줄 핵심 요약"
+                "한 줄 핵심 요약",
+                "직접 입력"
             ],
-            placeholder="목록에서 고르거나 원하는 내용을 직접 입력하세요",
-            accept_new_options=True,
             key="length_select"
         )
 
-        # 답변 모양 선택 (한 칸에서 고르거나 직접 타이핑 가능)
-        format_out = st.selectbox(
-            "원하는 답변 모양 (목록 선택 또는 직접 타이핑 가능)", 
+        if length_choice == "직접 입력":
+            custom_length = st.text_input(
+                "원하는 답변 분량을 직접 입력하세요:", 
+                placeholder="예) 500자 내외로 상세히 작성해 주세요.", 
+                key="custom_length_input"
+            )
+            length_out = custom_length if custom_length.strip() else "원하는 분량대로 작성"
+        else:
+            length_out = length_choice
+
+        # 2) 답변 모양 선택 (목록에 '직접 입력' 추가 -> 클릭 시 타이핑 칸 등장)
+        format_choice = st.selectbox(
+            "원하는 답변 모양 선택하기", 
             [
                 "1, 2, 3 번호로 핵심만 깔끔 요약",
                 "발표 대본 / 친근한 수다 말투 (~했단다, ~해요)",
                 "한눈에 비교하는 정돈된 표",
-                "학교 수행평가 제출용 깔끔한 줄글 설명문"
+                "학교 수행평가 제출용 깔끔한 줄글 설명문",
+                "직접 입력"
             ],
-            placeholder="목록에서 고르거나 원하는 내용을 직접 입력하세요",
-            accept_new_options=True,
             key="format_select"
         )
+
+        if format_choice == "직접 입력":
+            custom_format = st.text_input(
+                "원하는 답변 모양을 직접 입력하세요:", 
+                placeholder="예) Q&A 인터뷰 형식으로 작성해 주세요.", 
+                key="custom_format_input"
+            )
+            format_out = custom_format if custom_format.strip() else "깔끔한 구성"
+        else:
+            format_out = format_choice
 
         role_str = role if role else "전문가"
         topic_str = topic if topic else "[질문할 주제]"
@@ -343,10 +361,7 @@ with tab_main:
         else:
             constraint_str = constraint_base
 
-        length_str = length_out if length_out else "상세한 설명"
-        format_str = format_out if format_out else "깔끔한 구성"
-
-        generated_prompt = f"당신은 [{role_str}]입니다. [{topic_str}]에 대해 알려주세요.\n\n[약속/조건]: {constraint_str}\n[답변 분량]: {length_str}\n[답변 모양]: {format_str} 형태로 작성해 주세요."
+        generated_prompt = f"당신은 [{role_str}]입니다. [{topic_str}]에 대해 알려주세요.\n\n[약속/조건]: {constraint_str}\n[답변 분량]: {length_out}\n[답변 모양]: {format_out} 형태로 작성해 주세요."
         
         st.text_area("완성된 프롬프트 (복사해서 AI에 그대로 입력하세요):", generated_prompt, height=150)
         
