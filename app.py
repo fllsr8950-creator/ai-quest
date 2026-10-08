@@ -153,7 +153,7 @@ def render_ai_card(name, key, description):
     img_width = IMAGE_WIDTHS.get(key, 70)
     url = AI_URLS.get(key, "#")
     
-    col_img, col_txt = st.columns([1, 6], gap="small")
+    col_img, col_txt = st.columns([1, 4], gap="small")
     
     with col_img:
         if filename and os.path.exists(filename):
@@ -266,8 +266,8 @@ with tab_main:
             key="constraint_input"
         )
         
-        # 출처 포함 여부 선택 체크박스
-        include_source = st.checkbox("답변에 참고 출처 및 근거 포함하기", key="chk_include_source")
+        # 확실한 정보/출처 요구 옵션 체크박스
+        include_source = st.checkbox("확실하지 않은 정보 추측 방지 및 출처 요구하기", key="chk_include_source")
 
         length_out = st.selectbox(
             "답변 분량 / 길이 선택하기",
@@ -295,7 +295,7 @@ with tab_main:
         
         constraint_base = constraint if constraint else "핵심 위주로 친절하게 설명"
         if include_source:
-            constraint_str = f"{constraint_base} (참고한 출처나 근거도 함께 제시해주세요)"
+            constraint_str = f"{constraint_base}. 확실하지 않은 정보는 추측하지 말고, 신뢰할 수 있는 출처를 함께 제시해주세요."
         else:
             constraint_str = constraint_base
 
@@ -342,18 +342,15 @@ subjects = [
 
 def generate_infinite_case():
     selected_fig = random.choice(figures)
-    if isinstance(selected_fig, (tuple, list)) and len(selected_fig) >= 3:
-        fig, fig_fact, fig_era = selected_fig[0], selected_fig[1], selected_fig[2]
-    else:
-        fig, fig_fact, fig_era = "세종대왕", "1446년 훈민정음 반포", "조선 시대"
+    fig = selected_fig[0]
+    fig_fact = selected_fig[1]
+    fig_era = selected_fig[2]
 
     selected_ana = random.choice(anachronisms)
-    if isinstance(selected_ana, (tuple, list)) and len(selected_ana) >= 2:
-        ana, ana_fact = selected_ana[0], selected_ana[1]
-    else:
-        ana, ana_fact = "스마트폰 사용", "2000년대 기술"
+    ana = selected_ana[0]
+    ana_fact = selected_ana[1]
 
-    subj = str(random.choice(subjects))
+    subj = random.choice(subjects)
 
     claim = f"{fig_era} {fig}({fig_fact})은 {subj} 중 효율성을 높이기 위해 {ana}했다."
     hint = f"팩트체크 힌트: 포털에 [{fig} 활동 시기]와 [{ana_fact}]를 각각 검색해 연도를 대조해 보세요!"
