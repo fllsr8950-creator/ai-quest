@@ -8,34 +8,37 @@ st.set_page_config(
     layout="wide"
 )
 
-# Custom Styling (Mobile Responsive, Modern Card Design & Completely Hide Streamlit Branding/Footer/Sailboat Logo)
+# Custom Styling (Mobile Responsive, Modern Card Design & Completely Hide All Streamlit Logos/Headers/Footers/Toolbars)
 st.markdown("""
 <style>
-    /* Streamlit 상단 헤더, 우측 메뉴, 하단 푸터 및 종이 돛단배(Streamlit 로고 배지) 완벽 숨기기 */
-    header[data-testid="stHeader"] {
+    /* 1. 상단 헤더 및 전체 상단 바 영역 제거 */
+    header, header[data-testid="stHeader"], [data-testid="stHeader"], .stAppHeader, .stApp > header {
         display: none !important;
-    }
-    footer, div[data-testid="stFooter"] {
-        display: none !important;
-    }
-    #MainMenu {
         visibility: hidden !important;
-        display: none !important;
+        height: 0px !important;
     }
-    [data-testid="stToolbar"] {
+    
+    /* 2. 우측 상단 툴바, 깃허브 로고/링크, 메뉴 버튼, Deploy 버튼 제거 */
+    [data-testid="stToolbar"], [data-testid="stHeaderActionElements"], #MainMenu, .stActionButton, button[title*="View code"], a[href*="github.com"] {
         display: none !important;
+        visibility: hidden !important;
     }
-    [data-testid="stDecoration"] {
+
+    /* 3. 상단 무지개 데코레이션 라인 및 스피너/상태 표시 제거 */
+    [data-testid="stDecoration"], [data-testid="stStatusWidget"] {
         display: none !important;
+        visibility: hidden !important;
     }
-    [data-testid="stStatusWidget"] {
+
+    /* 4. 하단 푸터, 종이 돛단배 배지(viewerBadge), streamlit.io 링크 제거 */
+    footer, [data-testid="stFooter"], div[class*="viewerBadge"], [data-testid="stAppViewerFooter"], div[class*="stAppViewerFooter"], a[href*="streamlit.io"] {
         display: none !important;
+        visibility: hidden !important;
     }
-    div[class*="viewerBadge"], [data-testid="stAppViewerFooter"], div[class*="stAppViewerFooter"] {
-        display: none !important;
-    }
-    a[href*="streamlit.io"] {
-        display: none !important;
+
+    /* 5. 상단 헤더가 사라진 여백을 깔끔하게 조정 */
+    .stAppViewContainer > .main, .main .block-container {
+        padding-top: 2rem !important;
     }
 
     .main-title {
