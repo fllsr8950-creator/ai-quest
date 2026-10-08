@@ -36,7 +36,7 @@ st.markdown("""
         visibility: hidden !important;
     }
 
-    /* 5. 상단 헤더가 사라진 여백을 깔끔하게 조정 */
+    /* 5. 상단 여백 보정 */
     .stAppViewContainer > .main, .main .block-container {
         padding-top: 2rem !important;
     }
