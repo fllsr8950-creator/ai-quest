@@ -29,6 +29,7 @@ st.markdown("""
         padding: 1.2rem;
         border-radius: 8px;
         margin-top: 1.5rem;
+        margin-bottom: 1.5rem;
     }
     .bridge-box h4 {
         color: #2563EB !important;
@@ -83,20 +84,15 @@ st.markdown("""
         align-items: center !important;
     }
     
-    /* AI Link Button Styling */
-    .ai-link-btn {
-        display: inline-block;
-        background-color: #2563EB;
-        color: white !important;
-        padding: 0.2rem 0.6rem;
-        border-radius: 4px;
+    /* AI Name Link Styling */
+    .ai-name-link {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: #2563EB !important;
         text-decoration: none !important;
-        font-size: 0.85rem;
-        font-weight: 600;
-        margin-left: 0.5rem;
     }
-    .ai-link-btn:hover {
-        background-color: #1d4ed8;
+    .ai-name-link:hover {
+        text-decoration: underline !important;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -151,7 +147,7 @@ def render_ai_card(name, key, description):
     img_width = IMAGE_WIDTHS.get(key, 70)
     url = AI_URLS.get(key, "#")
     
-    col_img, col_txt = st.columns([1, 6], gap="small")
+    col_img, col_txt = st.columns([1, 5], gap="small")
     
     with col_img:
         if filename and os.path.exists(filename):
@@ -160,27 +156,26 @@ def render_ai_card(name, key, description):
             st.markdown("🤖")
             
     with col_txt:
-        st.markdown(f"**[{name}]({url})** &nbsp; [<span class='ai-link-btn'>🔗 바로가기</span>]({url})\n\n{description}", unsafe_allow_html=True)
+        st.markdown(f"<a href='{url}' target='_blank' class='ai-name-link'>👉 {name} (사이트 이동)</a>\n\n{description}", unsafe_allow_html=True)
     st.divider()
 
 # ---------------------------------------------------------
 # Header & Subtitle
 # ---------------------------------------------------------
 st.markdown("<div class='main-title'>중고생 AI 100% 활용법</div>", unsafe_allow_html=True)
-st.markdown("<div class='sub-title'>순서 상관없이! 지금 나에게 필요한 AI 추천과 프롬프트를 자유롭게 이용해 보세요.</div>", unsafe_allow_html=True)
+st.markdown("<div class='sub-title'>내 과제에 맞는 AI를 추천받고, 맞춤 프롬프트까지 한 번에 완성해 보세요!</div>", unsafe_allow_html=True)
 
-# Tabs
-tab_ai, tab_prompt, tab_fact = st.tabs([
-    "내 과제에 맞는 AI 추천", 
-    "AI 프롬프트 생성", 
+# Unified Tabs (Merged Tab 1 & 2)
+tab_main, tab_fact = st.tabs([
+    "🎯 AI 추천 & 프롬프트 생성", 
     "💡 AI 실수 찾아보기"
 ])
 
 # ---------------------------------------------------------
-# 1. 내 과제에 맞는 AI 추천
+# 통합 1탭: 내 과제에 맞는 AI 추천 + 프롬프트 생성
 # ---------------------------------------------------------
-with tab_ai:
-    st.subheader("내 과제에 맞는 AI 추천")
+with tab_main:
+    st.subheader("1. 내 과제에 맞는 AI 추천")
     st.info("💡 과제 특성에 맞는 최적의 AI 도구를 고르면 할루시네이션(거짓말) 확률을 낮추고 작업 효율을 최고로 높일 수 있습니다!")
     
     task_type = st.selectbox(
@@ -199,62 +194,51 @@ with tab_ai:
     )
     
     if "🔍" in task_type:
-        st.markdown("### 추천 AI 도구 목록")
+        st.markdown("### 🏆 추천 AI 도구 목록 (이름을 클릭하면 해당 사이트로 이동합니다)")
         render_ai_card("Perplexity (퍼플렉시티)", "Perplexity", "실시간 웹 검색 연동 및 문장마다 출처(URL)를 직접 달아주어 팩트체크 수고를 90% 줄여줍니다.")
         render_ai_card("Liner AI (라이너)", "Liner", "전문 자료 조사와 학술·웹 출처 검증, 완성된 보고서/자료의 정밀 내용 검토에 특화되어 있습니다.")
         render_ai_card("Google Gemini (제미나이)", "Gemini", "구글 검색 생태계와 결합하여 최신 정보 탐색 및 이미지/문서 분석에 우수합니다.")
 
     elif "📚" in task_type:
-        st.markdown("### 추천 AI 도구 목록")
+        st.markdown("### 🏆 추천 AI 도구 목록 (이름을 클릭하면 해당 사이트로 이동합니다)")
         render_ai_card("NotebookLM (노트북LM)", "NotebookLM", "내 교과서, 프린트, PDF 자료를 업로드하면 깊이 있는 내용 이해, 마인드맵/시각화 자료 및 오디오 가이드를 제공합니다.")
         render_ai_card("ThetaWaveAI (세타웨이브 AI)", "ThetaWaveAI", "긴 학습 자료를 한눈에 들어오게 요약·정리하고, 시험 대비용 맞춤형 AI 퀴즈를 자동으로 생성해 줍니다.")
         render_ai_card("Univ AI (유니브 AI)", "UnivAI", "교과 및 학술 자료의 체계적 정리와 복습용 실전 퀴즈 생성으로 자기주도 학습을 돕습니다.")
 
     elif "✍️" in task_type:
-        st.markdown("### 추천 AI 도구 목록")
+        st.markdown("### 🏆 추천 AI 도구 목록 (이름을 클릭하면 해당 사이트로 이동합니다)")
         render_ai_card("Claude (클로드)", "Claude", "방대한 분량의 긴 글과 논문 분석, 자연스러운 보고서 작문 및 논리적 텍스트 생성에 가장 탁월합니다.")
         render_ai_card("ChatGPT (챗GPT)", "ChatGPT", "개념 요약, 아이디어 발상, 독후감 개요 작성 등 만능으로 활용하기 좋은 대표 AI입니다.")
 
     elif "📐" in task_type:
-        st.markdown("### 추천 AI 도구 목록")
+        st.markdown("### 🏆 추천 AI 도구 목록 (이름을 클릭하면 해당 사이트로 이동합니다)")
         render_ai_card("QANDA (콴다)", "QANDA", "수학 문제 풀이 과정 해설, 오답 원인 분석 및 단계별 문제 해결에 독보적인 수학 전문 AI입니다.")
         render_ai_card("ChatGPT (챗GPT)", "ChatGPT", "수학 공식의 원리와 논리적 풀이 절차를 친절하게 해설해 주는 학습 파트너입니다.")
 
     elif "🎨" in task_type:
-        st.markdown("### 추천 AI 도구 목록")
+        st.markdown("### 🏆 추천 AI 도구 목록 (이름을 클릭하면 해당 사이트로 이동합니다)")
         render_ai_card("Gamma (감마)", "Gamma", "한 줄 프롬프트나 아이디어만 입력하면 발표용 PPT 슬라이드와 전용 웹 문서를 1분 만에 디자인해 줍니다.")
         render_ai_card("Canva AI (캔바)", "Canva", "카드뉴스, 인포그래픽, 포스터 시각화 디자인 템플릿을 자동으로 완성해 줍니다.")
         render_ai_card("NotebookLM (노트북LM)", "NotebookLM", "내 학습 자료를 기반으로 인포그래픽 개요와 시각화 자료 구상을 구체화해 줍니다.")
 
     elif "🌐" in task_type:
-        st.markdown("### 추천 AI 도구 목록")
+        st.markdown("### 🏆 추천 AI 도구 목록 (이름을 클릭하면 해당 사이트로 이동합니다)")
         render_ai_card("Claude (클로드)", "Claude", "가장 원어민스럽고 자연스러운 뉘앙스의 영작문 교정 및 긴 원서 독해 해설을 제공합니다.")
         render_ai_card("ChatGPT (챗GPT)", "ChatGPT", "영어 회화 롤플레잉 연습, 문법 오류 수정, 어휘 설명에 우수한 외국어 학습 파트너입니다.")
 
     elif "💻" in task_type:
-        st.markdown("### 추천 AI 도구 목록")
+        st.markdown("### 🏆 추천 AI 도구 목록 (이름을 클릭하면 해당 사이트로 이동합니다)")
         render_ai_card("Claude (클로드)", "Claude", "복잡한 코드 오류(디버깅) 원인을 친절하게 설명하고 깔끔한 알고리즘 코드를 작성해 줍니다.")
         render_ai_card("ChatGPT (챗GPT)", "ChatGPT", "파이썬, HTML, C언어 등 정보 교과 실습 과제의 기초 코드 작성과 주석 해설에 유용합니다.")
 
-    if task_type != "선택하세요":
-        st.markdown("""
-        <div class='bridge-box'>
-            <h4>💡 AI 도구를 골랐다면?</h4>
-            <p>👉 <b>[AI 프롬프트 생성] 탭으로 이동하여 AI에게 전달할 맞춤 질문(프롬프트)을 쉽게 만들어 보세요!</b></p>
-        </div>
-        """, unsafe_allow_html=True)
+    st.markdown("---")
 
-# ---------------------------------------------------------
-# 2. AI 프롬프트 생성
-# ---------------------------------------------------------
-with tab_prompt:
-    st.subheader("AI 프롬프트 생성")
+    # 프롬프트 생성 영역
+    st.subheader("2. AI 맞춤 질문(프롬프트) 생성기")
     st.info("💡 AI에게 확실한 역할, 조건, 분량, 답변 모양을 지정해 주면 100점짜리 답변이 나옵니다.")
     
     col1, col2 = st.columns(2)
     with col1:
-        st.markdown("#### 1. AI 맞춤 질문(프롬프트) 생성기")
-        
         role = st.text_input(
             "AI의 캐릭터 / 직업 (어떤 역할로 답해줄까요?)", 
             placeholder="예) 친절한 고등학교 정보 선생님", 
@@ -292,7 +276,6 @@ with tab_prompt:
             key="format_select"
         )
         
-        # Display placeholders in generated prompt if field is empty
         role_str = role if role else "전문가"
         topic_str = topic if topic else "[질문할 주제]"
         constraint_str = constraint if constraint else "핵심 위주로 친절하게 설명"
@@ -303,7 +286,7 @@ with tab_prompt:
         st.caption("💡 **활용 팁**: AI 답변 끝에 *'참고한 출처나 근거도 함께 알려줘'*라고 한 번 더 질문하면 답변의 정확도가 높아집니다!")
         
     with col2:
-        st.markdown("#### 2. 최종 제출 전 팩트체크 체크리스트")
+        st.markdown("#### 3. 최종 제출 전 팩트체크 체크리스트")
         chk1 = st.checkbox("출처 체크 (숫자, 날짜, 인명을 포털에서 직접 대조해 보았나요?)", key="chk1")
         chk2 = st.checkbox("도구 체크 (과제 성격에 맞는 최적의 AI를 사용하였나요?)", key="chk2")
         chk3 = st.checkbox("내 글로 재구성 (AI 답변을 그대로 복사하지 않고 내 언어로 바꿨나요?)", key="chk3")
@@ -313,7 +296,7 @@ with tab_prompt:
             st.success("축하합니다! AI를 100% 주도적으로 컨트롤하는 스마트 AI 리터러시 마스터 과정을 완수하셨습니다!")
 
 # ---------------------------------------------------------
-# 3. 💡 AI 실수 찾아보기
+# 2탭: 💡 AI 실수 찾아보기
 # ---------------------------------------------------------
 figures = [
     ("세종대왕", "1446년 훈민정음 반포", "조선 시대"),
