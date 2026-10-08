@@ -307,27 +307,29 @@ with tab_main:
         # 확실한 정보/출처 요구 옵션 체크박스
         include_source = st.checkbox("확실하지 않은 정보 추측 방지 및 출처 요구하기", key="chk_include_source")
 
-        # 답변 분량 선택 (한 칸에서 선택 OR 직접 입력)
+        # 답변 분량 선택 (한 칸에서 고르거나 직접 타이핑 가능)
         length_out = st.selectbox(
-            "답변 분량 / 길이 선택 (목록 선택 또는 직접 입력)",
+            "답변 분량 / 길이 (목록 선택 또는 직접 타이핑 가능)",
             [
                 "상세한 설명 (보고서/발표용)",
                 "보통 (1~2문단 분량)",
                 "한 줄 핵심 요약"
             ],
+            placeholder="목록에서 고르거나 원하는 내용을 직접 입력하세요",
             accept_new_options=True,
             key="length_select"
         )
 
-        # 답변 모양 선택 (한 칸에서 선택 OR 직접 입력)
+        # 답변 모양 선택 (한 칸에서 고르거나 직접 타이핑 가능)
         format_out = st.selectbox(
-            "원하는 답변 모양 선택 (목록 선택 또는 직접 입력)", 
+            "원하는 답변 모양 (목록 선택 또는 직접 타이핑 가능)", 
             [
                 "1, 2, 3 번호로 핵심만 깔끔 요약",
                 "발표 대본 / 친근한 수다 말투 (~했단다, ~해요)",
                 "한눈에 비교하는 정돈된 표",
                 "학교 수행평가 제출용 깔끔한 줄글 설명문"
             ],
+            placeholder="목록에서 고르거나 원하는 내용을 직접 입력하세요",
             accept_new_options=True,
             key="format_select"
         )
@@ -341,7 +343,10 @@ with tab_main:
         else:
             constraint_str = constraint_base
 
-        generated_prompt = f"당신은 [{role_str}]입니다. [{topic_str}]에 대해 알려주세요.\n\n[약속/조건]: {constraint_str}\n[답변 분량]: {length_out}\n[답변 모양]: {format_out} 형태로 작성해 주세요."
+        length_str = length_out if length_out else "상세한 설명"
+        format_str = format_out if format_out else "깔끔한 구성"
+
+        generated_prompt = f"당신은 [{role_str}]입니다. [{topic_str}]에 대해 알려주세요.\n\n[약속/조건]: {constraint_str}\n[답변 분량]: {length_str}\n[답변 모양]: {format_str} 형태로 작성해 주세요."
         
         st.text_area("완성된 프롬프트 (복사해서 AI에 그대로 입력하세요):", generated_prompt, height=150)
         
