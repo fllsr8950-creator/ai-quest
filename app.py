@@ -77,6 +77,7 @@ st.markdown("""
 
 # ---------------------------------------------------------
 # KakaoTalk Image Mapping & Renderer
+# Swapped Liner (_10.png) and ThetaWaveAI (_08.png)
 # ---------------------------------------------------------
 IMAGE_FILES = {
     "Gemini": "KakaoTalk_20261007_220156149_01.png",
@@ -86,15 +87,15 @@ IMAGE_FILES = {
     "NotebookLM": "KakaoTalk_20261007_220156149_05.png",
     "QANDA": "KakaoTalk_20261007_220156149_06.png",
     "Gamma": "KakaoTalk_20261007_220156149_07.png",
-    "Liner": "KakaoTalk_20261007_220156149_08.png",
+    "ThetaWaveAI": "KakaoTalk_20261007_220156149_08.png",
     "UnivAI": "KakaoTalk_20261007_220156149_09.png",
-    "ThetaWaveAI": "KakaoTalk_20261007_220156149_10.png",
+    "Liner": "KakaoTalk_20261007_220156149_10.png",
     "Perplexity": "KakaoTalk_20261007_220156149.png"
 }
 
 def render_ai_card(name, key, description):
     filename = IMAGE_FILES.get(key, "")
-    col_img, col_txt = st.columns([1, 6])
+    col_img, col_txt = st.columns([1, 5])
     
     with col_img:
         if filename and os.path.exists(filename):
@@ -139,7 +140,7 @@ tab1, tab2, tab3 = st.tabs([
 ])
 
 # ---------------------------------------------------------
-# 무한 문제 조합 생성기
+# 무한 문제 조합 생성기 (완벽 오류 수정)
 # ---------------------------------------------------------
 figures = [
     ("세종대왕", "1446년 훈민정음 반포", "조선 시대"),
@@ -167,22 +168,19 @@ subjects = [
 
 def generate_infinite_case():
     selected_fig = random.choice(figures)
-    if isinstance(selected_fig, (tuple, list)):
-        fig = str(selected_fig) if len(selected_fig) > 0 else "세종대왕"
-        fig_fact = str(selected_fig) if len(selected_fig) > 1 else "역사적 사건"
-        fig_era = str(selected_fig) if len(selected_fig) > 2 else "조선시대"
+    if isinstance(selected_fig, (tuple, list)) and len(selected_fig) >= 3:
+        fig, fig_fact, fig_era = selected_fig[0], selected_fig[1], selected_fig[2]
     else:
-        fig, fig_fact, fig_era = str(selected_fig), "역사적 사건", "조선시대"
+        fig, fig_fact, fig_era = "세종대왕", "1446년 훈민정음 반포", "조선 시대"
 
     selected_ana = random.choice(anachronisms)
-    if isinstance(selected_ana, (tuple, list)):
-        ana = str(selected_ana) if len(selected_ana) > 0 else "스마트폰 사용"
-        ana_fact = str(selected_ana) if len(selected_ana) > 1 else "2000년대 기술"
+    if isinstance(selected_ana, (tuple, list)) and len(selected_ana) >= 2:
+        ana, ana_fact = selected_ana[0], selected_ana[1]
     else:
-        ana, ana_fact = str(selected_ana), "2000년대 기술"
+        ana, ana_fact = "스마트폰 사용", "2000년대 기술"
 
     subj = str(random.choice(subjects))
-    ana_fact_word = ana_fact.split() if isinstance(ana_fact, str) and ana_fact.split() else str(ana_fact)
+    ana_fact_word = ana_fact.split()[0] if isinstance(ana_fact, str) and ana_fact.split() else str(ana_fact)
 
     claim = f"{fig_era} {fig}({fig_fact})은 {subj} 중 효율성을 높이기 위해 {ana}했다."
     hint = f"팩트체크 힌트: 포털에 [{fig} 활동 시기]와 [{ana_fact_word} 시기]를 각각 검색해 연도를 대조해 보세요!"
