@@ -8,7 +8,7 @@ st.set_page_config(
     layout="wide"
 )
 
-# Custom Styling (Mobile Responsive & Checkbox Wrapping Fix)
+# Custom Styling (Mobile Responsive & Tighter Image-Text Gap)
 st.markdown("""
 <style>
     .main-title {
@@ -73,16 +73,20 @@ st.markdown("""
         font-size: 0.95rem !important;
     }
 
-    /* Reduce horizontal gap in column layout for AI cards */
+    /* Bring image and text closer by tightening column gaps */
     [data-testid="column"] {
-        padding-left: 0.2rem !important;
-        padding-right: 0.2rem !important;
+        padding-left: 0rem !important;
+        padding-right: 0rem !important;
+    }
+    div[data-testid="stHorizontalBlock"] {
+        gap: 0.4rem !important;
+        align-items: center !important;
     }
 </style>
 """, unsafe_allow_html=True)
 
 # ---------------------------------------------------------
-# KakaoTalk Image Mapping & Renderer
+# KakaoTalk Image Mapping & Custom Image Sizes
 # ---------------------------------------------------------
 IMAGE_FILES = {
     "Gemini": "KakaoTalk_20261007_220156149_01.png",
@@ -98,13 +102,30 @@ IMAGE_FILES = {
     "Perplexity": "KakaoTalk_20261007_220156149.png"
 }
 
+# Specific widths: Rectangular/wide logos get larger width, square logos get 70px
+IMAGE_WIDTHS = {
+    "Perplexity": 90,
+    "UnivAI": 95,
+    "Liner": 85,
+    "ThetaWaveAI": 85,
+    "Gemini": 70,
+    "ChatGPT": 70,
+    "Claude": 70,
+    "Canva": 70,
+    "NotebookLM": 70,
+    "QANDA": 70,
+    "Gamma": 70
+}
+
 def render_ai_card(name, key, description):
     filename = IMAGE_FILES.get(key, "")
-    col_img, col_txt = st.columns([1, 6])
+    img_width = IMAGE_WIDTHS.get(key, 70)
+    
+    col_img, col_txt = st.columns([1, 6], gap="small")
     
     with col_img:
         if filename and os.path.exists(filename):
-            st.image(filename, width=65)
+            st.image(filename, width=img_width)
         else:
             st.markdown("### 🤖")
             
