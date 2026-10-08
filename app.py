@@ -423,4 +423,3 @@ with tab_fact:
             st.metric("내 누적 오류 적발 건수", f"{st.session_state.solved_cases_count}건 성공!")
         else:
             st.error("다시 검증해 보세요! 힌트를 참고하여 두 연도가 일치하는지 확인해 보세요.")
-            ?embed=true
