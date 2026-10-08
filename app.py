@@ -138,7 +138,7 @@ def render_ai_card(name, key, description):
 st.markdown("<div class='main-title'>중고생 AI 100% 활용법</div>", unsafe_allow_html=True)
 st.markdown("<div class='sub-title'>순서 상관없이! 지금 나에게 필요한 AI 추천과 프롬프트를 자유롭게 이용해 보세요.</div>", unsafe_allow_html=True)
 
-# Tabs: "내 과제에 맞는 AI 추천", "AI 프롬프트 생성", "💡 AI 실수 찾아보기"
+# Tabs
 tab_ai, tab_prompt, tab_fact = st.tabs([
     "내 과제에 맞는 AI 추천", 
     "AI 프롬프트 생성", 
@@ -218,15 +218,59 @@ with tab_ai:
 # ---------------------------------------------------------
 with tab_prompt:
     st.subheader("AI 프롬프트 생성")
-    st.info("💡 AI에게 확실한 역할, 조건, 답변 모양을 지정해 주면 100점짜리 답변이 나옵니다.")
+    st.info("💡 AI에게 확실한 역할, 조건, 분량, 답변 모양을 지정해 주면 100점짜리 답변이 나옵니다.")
     
     col1, col2 = st.columns(2)
     with col1:
         st.markdown("#### 1. AI 맞춤 질문(프롬프트) 생성기")
-        role = st.text_input("AI의 캐릭터 / 직업 (어떤 역할로 답해줄까요?)", "친절한 고등학교 정보 선생님", key="role_input")
-        topic = st.text_input("내가 궁금한 주제/과제", "인공지능 윤리와 저작권 문제", key="topic_input")
-        constraint = st.text_input("꼭 지켜야 할 약속/조건", "초등학생도 이해할 쉬운 단어로 3가지 요약", key="constraint_input")
         
+        # 원클릭 템플릿 버튼
+        st.markdown("**⚡ 원클릭 추천 예시 채우기**")
+        b_col1, b_col2, b_col3, b_col4 = st.columns(4)
+        
+        if b_col1.button("📝 핵심 요약"):
+            st.session_state.role_input = "친절한 고등학교 정보 선생님"
+            st.session_state.topic_input = "인공지능 윤리와 저작권 문제"
+            st.session_state.constraint_input = "초등학생도 이해할 쉬운 단어로 핵심만 설명"
+        if b_col2.button("❓ 퀴즈 생성"):
+            st.session_state.role_input = "출제 전문 교과 선생님"
+            st.session_state.topic_input = "조선 시대 세종대왕의 주요 업적"
+            st.session_state.constraint_input = "정답과 해설이 포함된 4지선다형 3문제 생성"
+        if b_col3.button("🔍 오류 검토"):
+            st.session_state.role_input = "꼼꼼한 논술 및 보고서 첨삭 전문가"
+            st.session_state.topic_input = "내가 작성한 수행평가 보고서 내용"
+            st.session_state.constraint_input = "맞춤법, 논리적 오류, 어색한 문장 수정 제시"
+        if b_col4.button("💡 아이디어"):
+            st.session_state.role_input = "창의적인 브레인스토밍 멘토"
+            st.session_state.topic_input = "환경 보호를 위한 학교 동아리 활동 주제"
+            st.session_state.constraint_input = "실행 가능하고 독창적인 아이디어 5가지 제안"
+
+        role = st.text_input(
+            "AI의 캐릭터 / 직업 (어떤 역할로 답해줄까요?)", 
+            placeholder="예) 친절한 고등학교 정보 선생님", 
+            key="role_input"
+        )
+        topic = st.text_input(
+            "내가 궁금한 주제 / 과제", 
+            placeholder="예) 인공지능 윤리와 저작권 문제", 
+            key="topic_input"
+        )
+        constraint = st.text_input(
+            "꼭 지켜야 할 약속 / 조건", 
+            placeholder="예) 초등학생도 이해할 쉬운 단어로 핵심만 설명", 
+            key="constraint_input"
+        )
+        
+        length_out = st.selectbox(
+            "답변 분량 / 길이 선택하기",
+            [
+                "상세한 설명 (보고서/발표용)",
+                "보통 (1~2문단 분량)",
+                "한 줄 핵심 요약"
+            ],
+            key="length_select"
+        )
+
         format_out = st.selectbox(
             "원하는 답변 모양 선택하기", 
             [
@@ -238,8 +282,15 @@ with tab_prompt:
             key="format_select"
         )
         
-        generated_prompt = f"당신은 [{role}]입니다. [{topic}]에 대해 알려주세요.\n\n[약속/조건]: {constraint}\n[답변 모양]: {format_out} 형태로 작성해 주세요."
-        st.text_area("완성된 프롬프트 (복사해서 AI에 그대로 입력하세요):", generated_prompt, height=140)
+        # Display placeholders in generated prompt if field is empty
+        role_str = role if role else "전문가"
+        topic_str = topic if topic else "[질문할 주제]"
+        constraint_str = constraint if constraint else "핵심 위주로 친절하게 설명"
+
+        generated_prompt = f"당신은 [{role_str}]입니다. [{topic_str}]에 대해 알려주세요.\n\n[약속/조건]: {constraint_str}\n[답변 분량]: {length_out}\n[답변 모양]: {format_out} 형태로 작성해 주세요."
+        
+        st.text_area("완성된 프롬프트 (복사해서 AI에 그대로 입력하세요):", generated_prompt, height=150)
+        st.caption("💡 **활용 팁**: AI 답변 끝에 *'참고한 출처나 근거도 함께 알려줘'*라고 한 번 더 질문하면 답변의 정확도가 높아집니다!")
         
     with col2:
         st.markdown("#### 2. 최종 제출 전 팩트체크 체크리스트")
@@ -256,7 +307,7 @@ with tab_prompt:
 # ---------------------------------------------------------
 figures = [
     ("세종대왕", "1446년 훈민정음 반포", "조선 시대"),
-    ("이순신 장군", "1592년 한산도 대첩", "조선 임진외부"),
+    ("이순신 장군", "1592년 한산도 대첩", "조선 임진왜란"),
     ("아인슈타인", "1905년 상대성 이론 발표", "20세기 초"),
     ("레오나르도 다빈치", "1503년 모나리자 제작", "르네상스 시대"),
     ("김구 선생", "1919년 대한민국 임시정부 수립", "일제강점기"),
@@ -281,18 +332,18 @@ subjects = [
 def generate_infinite_case():
     selected_fig = random.choice(figures)
     if isinstance(selected_fig, (tuple, list)) and len(selected_fig) >= 3:
-        fig, fig_fact, fig_era = selected_fig[0], selected_fig[1], selected_fig[2]
+        fig, fig_fact, fig_era = selected_fig, selected_fig, selected_fig
     else:
         fig, fig_fact, fig_era = "세종대왕", "1446년 훈민정음 반포", "조선 시대"
 
     selected_ana = random.choice(anachronisms)
     if isinstance(selected_ana, (tuple, list)) and len(selected_ana) >= 2:
-        ana, ana_fact = selected_ana[0], selected_ana[1]
+        ana, ana_fact = selected_ana, selected_ana
     else:
         ana, ana_fact = "스마트폰 사용", "2000년대 기술"
 
     subj = str(random.choice(subjects))
-    ana_fact_word = ana_fact.split()[0] if isinstance(ana_fact, str) and ana_fact.split() else str(ana_fact)
+    ana_fact_word = ana_fact.split() if isinstance(ana_fact, str) and ana_fact.split() else str(ana_fact)
 
     claim = f"{fig_era} {fig}({fig_fact})은 {subj} 중 효율성을 높이기 위해 {ana}했다."
     hint = f"팩트체크 힌트: 포털에 [{fig} 활동 시기]와 [{ana_fact_word} 시기]를 각각 검색해 연도를 대조해 보세요!"
