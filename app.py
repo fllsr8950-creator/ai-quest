@@ -82,11 +82,27 @@ st.markdown("""
         gap: 0.4rem !important;
         align-items: center !important;
     }
+    
+    /* AI Link Button Styling */
+    .ai-link-btn {
+        display: inline-block;
+        background-color: #2563EB;
+        color: white !important;
+        padding: 0.2rem 0.6rem;
+        border-radius: 4px;
+        text-decoration: none !important;
+        font-size: 0.85rem;
+        font-weight: 600;
+        margin-left: 0.5rem;
+    }
+    .ai-link-btn:hover {
+        background-color: #1d4ed8;
+    }
 </style>
 """, unsafe_allow_html=True)
 
 # ---------------------------------------------------------
-# KakaoTalk Image Mapping & Custom Image Sizes
+# KakaoTalk Image Mapping, Custom Image Sizes & Official URLs
 # ---------------------------------------------------------
 IMAGE_FILES = {
     "Gemini": "KakaoTalk_20261007_220156149_01.png",
@@ -116,9 +132,24 @@ IMAGE_WIDTHS = {
     "Gamma": 70
 }
 
+AI_URLS = {
+    "Perplexity": "https://www.perplexity.ai",
+    "Liner": "https://liner.ai",
+    "Gemini": "https://gemini.google.com",
+    "NotebookLM": "https://notebooklm.google.com",
+    "ThetaWaveAI": "https://thetawave.ai",
+    "UnivAI": "https://univ.ai",
+    "Claude": "https://claude.ai",
+    "ChatGPT": "https://chatgpt.com",
+    "QANDA": "https://qanda.ai",
+    "Gamma": "https://gamma.app",
+    "Canva": "https://www.canva.com"
+}
+
 def render_ai_card(name, key, description):
     filename = IMAGE_FILES.get(key, "")
     img_width = IMAGE_WIDTHS.get(key, 70)
+    url = AI_URLS.get(key, "#")
     
     col_img, col_txt = st.columns([1, 6], gap="small")
     
@@ -129,7 +160,7 @@ def render_ai_card(name, key, description):
             st.markdown("🤖")
             
     with col_txt:
-        st.markdown(f"**{name}**\n\n{description}")
+        st.markdown(f"**[{name}]({url})** &nbsp; [<span class='ai-link-btn'>🔗 바로가기</span>]({url})\n\n{description}", unsafe_allow_html=True)
     st.divider()
 
 # ---------------------------------------------------------
@@ -224,27 +255,6 @@ with tab_prompt:
     with col1:
         st.markdown("#### 1. AI 맞춤 질문(프롬프트) 생성기")
         
-        # 원클릭 템플릿 버튼
-        st.markdown("**⚡ 원클릭 추천 예시 채우기**")
-        b_col1, b_col2, b_col3, b_col4 = st.columns(4)
-        
-        if b_col1.button("📝 핵심 요약"):
-            st.session_state.role_input = "친절한 고등학교 정보 선생님"
-            st.session_state.topic_input = "인공지능 윤리와 저작권 문제"
-            st.session_state.constraint_input = "초등학생도 이해할 쉬운 단어로 핵심만 설명"
-        if b_col2.button("❓ 퀴즈 생성"):
-            st.session_state.role_input = "출제 전문 교과 선생님"
-            st.session_state.topic_input = "조선 시대 세종대왕의 주요 업적"
-            st.session_state.constraint_input = "정답과 해설이 포함된 4지선다형 3문제 생성"
-        if b_col3.button("🔍 오류 검토"):
-            st.session_state.role_input = "꼼꼼한 논술 및 보고서 첨삭 전문가"
-            st.session_state.topic_input = "내가 작성한 수행평가 보고서 내용"
-            st.session_state.constraint_input = "맞춤법, 논리적 오류, 어색한 문장 수정 제시"
-        if b_col4.button("💡 아이디어"):
-            st.session_state.role_input = "창의적인 브레인스토밍 멘토"
-            st.session_state.topic_input = "환경 보호를 위한 학교 동아리 활동 주제"
-            st.session_state.constraint_input = "실행 가능하고 독창적인 아이디어 5가지 제안"
-
         role = st.text_input(
             "AI의 캐릭터 / 직업 (어떤 역할로 답해줄까요?)", 
             placeholder="예) 친절한 고등학교 정보 선생님", 
