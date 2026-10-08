@@ -102,7 +102,6 @@ IMAGE_FILES = {
     "Perplexity": "KakaoTalk_20261007_220156149.png"
 }
 
-# Specific widths: Rectangular/wide logos get larger width, square logos get 70px
 IMAGE_WIDTHS = {
     "Perplexity": 90,
     "UnivAI": 95,
@@ -121,7 +120,7 @@ def render_ai_card(name, key, description):
     filename = IMAGE_FILES.get(key, "")
     img_width = IMAGE_WIDTHS.get(key, 70)
     
-    col_img, col_txt = st.columns([1, 6], gap="small")
+    col_img, col_txt = st.columns([1, 5], gap="small")
     
     with col_img:
         if filename and os.path.exists(filename):
@@ -134,35 +133,39 @@ def render_ai_card(name, key, description):
     st.divider()
 
 # ---------------------------------------------------------
-# State Management & Progress Calculation
+# State Management & Progress Calculation (Core: Stage 1 & 2)
 # ---------------------------------------------------------
 if 'solved_cases_count' not in st.session_state:
     st.session_state.solved_cases_count = 0
 
-completed = []
-if st.session_state.get('stage1_done', False) or st.session_state.solved_cases_count > 0:
-    completed.append(1)
+main_completed = []
+
+# Core Stage 1 (Select AI): user selected a task
 if st.session_state.get('task_type_select', '선택하세요') != '선택하세요':
-    completed.append(2)
+    main_completed.append(1)
+
+# Core Stage 2 (Prompt Checklist): user checked all 3 checkboxes
 if (st.session_state.get('chk1', False) and 
     st.session_state.get('chk2', False) and 
     st.session_state.get('chk3', False)):
-    completed.append(3)
+    main_completed.append(2)
 
-st.session_state.completed_stages = completed
+st.session_state.completed_stages = main_completed
 
 # Header
 st.markdown("<div class='main-title'>[2026CJU] 중고생을 위한 AI 100% 진짜 활용법</div>", unsafe_allow_html=True)
-st.markdown("<div class='sub-title'>1단계(한계 진단) -> 2단계(AI 선택) -> 3단계(프롬프트)</div>", unsafe_allow_html=True)
+st.markdown("<div class='sub-title'>🔥 메인 과제 코스: 1단계(과제별 AI 선택) ➔ 2단계(프롬프트 조립) | 💡 선택: 자율 오류 찾기 연습실</div>", unsafe_allow_html=True)
 
-progress_ratio = len(st.session_state.completed_stages) / 3.0
+progress_ratio = len(st.session_state.completed_stages) / 2.0
 st.progress(min(progress_ratio, 1.0))
-st.caption(f"전체 퀘스트 달성도: {int(min(progress_ratio, 1.0) * 100)}% ({len(st.session_state.completed_stages)}/3 단계 완료)")
+st.caption(f"🎯 핵심 과제 달성도: {int(min(progress_ratio, 1.0) * 100)}% ({len(st.session_state.completed_stages)}/2 단계 완료)" + 
+           (f" | 🏆 자율 팩트체크 적발: {st.session_state.solved_cases_count}건" if st.session_state.solved_cases_count > 0 else ""))
 
-tab1, tab2, tab3 = st.tabs([
-    "1단계: AI 오류 찾기", 
-    "2단계: 과제별 AI 선택", 
-    "3단계: 프롬프트"
+# Tab Layout: Core 1 & Core 2 grouped first, Practice Tab separately
+tab_main1, tab_main2, tab_practice = st.tabs([
+    "🎯 1단계: 과제별 AI 선택", 
+    "✍️ 2단계: 프롬프트 조립", 
+    "💡 (선택) AI 오류 찾기 연습실"
 ])
 
 # ---------------------------------------------------------
@@ -219,67 +222,11 @@ def generate_infinite_case():
     }
 
 # ---------------------------------------------------------
-# 1단계: AI 오류 찾기
+# 메인 1단계: 과제별 AI 선택
 # ---------------------------------------------------------
-with tab1:
-    st.subheader("1단계: AI 오류 찾기")
-    st.markdown("""
-    > **미션 목표**: AI가 그럴듯하게 지어낸 가짜 사실을 **'배경지식 없이 연도 대조/검색'**만으로 적발하세요!
-    """)
-    
-    if 'current_case' not in st.session_state:
-        st.session_state.current_case = generate_infinite_case()
-        
-    c = st.session_state.current_case
-    
-    if st.button("새로운 문제 받기", key="btn_new_case"):
-        st.session_state.current_case = generate_infinite_case()
-        st.rerun()
-            
-    st.warning(f"AI가 작성한 문장:\n\n\"{c['claim']}\"")
-    
-    with st.expander("배경지식이 없는데 어떻게 검증하나요? (팩트체크 힌트)"):
-        st.markdown(c['hint'])
-        
-    user_ans = st.radio(
-        "이 AI 문장은 참일까요, 거짓일까요?",
-        [
-            "① 참 (실제 일어난 사실이다)", 
-            "② 거짓 (AI가 연도를 조작한 거짓 정보이다)"
-        ],
-        index=None,
-        key=f"radio_{hash(c['claim'])}"
-    )
-    
-    if user_ans:
-        if "②" in user_ans:
-            st.session_state.stage1_done = True
-            st.success(c['explanation'])
-            
-            if st.session_state.get('last_solved_claim') != c['claim']:
-                st.session_state.solved_cases_count += 1
-                st.session_state.last_solved_claim = c['claim']
-                st.rerun()
-                
-            st.metric("내 누적 오류 적발 건수", f"{st.session_state.solved_cases_count}건 성공!")
-            
-            st.markdown("""
-            <div class='bridge-box'>
-                <h4>1단계를 마친 당신! 다음 단계로 가볼까요?</h4>
-                <p>매번 일일이 구글링해서 팩트체크하는 건 시간이 너무 오래 걸립니다.</p>
-                <p>👉 <b>[2단계: 과제별 AI 선택] 탭으로 이동하여 처음부터 팩트와 출처를 잘 달아주는 AI 도구를 골라보세요!</b></p>
-            </div>
-            """, unsafe_allow_html=True)
-            
-        else:
-            st.error("다시 검증해 보세요! 힌트를 참고하여 두 연도가 일치하는지 확인해 보세요.")
-
-# ---------------------------------------------------------
-# 2단계: 과제별 AI 선택
-# ---------------------------------------------------------
-with tab2:
-    st.subheader("2단계: 과제별 AI 선택")
-    st.info("왜 2단계가 필요한가요? 1단계처럼 매번 일일이 팩트체크하기 귀찮죠? 과제 특성에 맞는 최적의 AI를 고르면 거짓말 확률이 극적으로 낮아집니다!")
+with tab_main1:
+    st.subheader("1단계: 과제별 AI 선택")
+    st.info("💡 과제 특성에 맞는 최적의 AI 도구를 고르면 할루시네이션(거짓말) 확률을 낮추고 작업 효율을 최고로 높일 수 있습니다!")
     
     task_type = st.selectbox(
         "내가 진행하려는 과제는 무엇인가요?",
@@ -335,11 +282,11 @@ with tab2:
         render_ai_card("ChatGPT (챗GPT)", "ChatGPT", "파이썬, HTML, C언어 등 정보 교과 실습 과제의 기초 코드 작성과 주석 해설에 유용합니다.")
 
 # ---------------------------------------------------------
-# 3단계: 프롬프트
+# 메인 2단계: 프롬프트 조립
 # ---------------------------------------------------------
-with tab3:
-    st.subheader("3단계: 내 맘대로 만드는 AI 프롬프트")
-    st.info("왜 3단계가 필요한가요? 성의 없이 질문하면 AI도 대충 답합니다! AI에게 확실한 역할과 모양을 지정해 주면 100점짜리 답변이 나옵니다.")
+with tab_main2:
+    st.subheader("2단계: 내 맘대로 만드는 AI 프롬프트")
+    st.info("💡 AI에게 확실한 역할, 조건, 답변 모양을 지정해 주면 100점짜리 답변이 나옵니다.")
     
     col1, col2 = st.columns(2)
     with col1:
@@ -371,3 +318,50 @@ with tab3:
         if chk1 and chk2 and chk3:
             st.balloons()
             st.success("축하합니다! AI를 100% 주도적으로 컨트롤하는 스마트 AI 리터러시 마스터 과정을 완수하셨습니다!")
+
+# ---------------------------------------------------------
+# 선택 탭: 자율 AI 오류 찾기 연습실
+# ---------------------------------------------------------
+with tab_practice:
+    st.subheader("💡 (자율 연습) AI 오류 찾기 훈련실")
+    st.markdown("""
+    > **연습 목적**: 이미 AI의 한계를 아는 분은 건너뛰셔도 됩니다! AI가 그럴듯하게 지어낸 가짜 사실을 **'연도 대조/검색'**만으로 적발해 보는 자율 훈련 공간입니다.
+    """)
+    
+    if 'current_case' not in st.session_state:
+        st.session_state.current_case = generate_infinite_case()
+        
+    c = st.session_state.current_case
+    
+    if st.button("새로운 연습 문제 받기", key="btn_new_case"):
+        st.session_state.current_case = generate_infinite_case()
+        st.rerun()
+            
+    st.warning(f"AI가 작성한 문장:\n\n\"{c['claim']}\"")
+    
+    with st.expander("배경지식이 없는데 어떻게 검증하나요? (팩트체크 힌트)"):
+        st.markdown(c['hint'])
+        
+    user_ans = st.radio(
+        "이 AI 문장은 참일까요, 거짓일까요?",
+        [
+            "① 참 (실제 일어난 사실이다)", 
+            "② 거짓 (AI가 연도를 조작한 거짓 정보이다)"
+        ],
+        index=None,
+        key=f"radio_{hash(c['claim'])}"
+    )
+    
+    if user_ans:
+        if "②" in user_ans:
+            st.success(c['explanation'])
+            
+            if st.session_state.get('last_solved_claim') != c['claim']:
+                st.session_state.solved_cases_count += 1
+                st.session_state.last_solved_claim = c['claim']
+                st.rerun()
+                
+            st.metric("내 누적 자율 적발 건수", f"{st.session_state.solved_cases_count}건 성공!")
+            
+        else:
+            st.error("다시 검증해 보세요! 힌트를 참고하여 두 연도가 일치하는지 확인해 보세요.")
