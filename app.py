@@ -8,35 +8,27 @@ st.set_page_config(
     layout="wide"
 )
 
-# Custom Styling (Mobile Responsive, Modern Card Design & Completely Hide All Streamlit Logos/Headers/Footers/Toolbars)
+# Custom Styling (깃허브 로고, 상단바, 하단 돛단배 완전 삭제 CSS)
 st.markdown("""
 <style>
-    /* 1. 상단 헤더 및 전체 상단 바 영역 제거 */
-    header, header[data-testid="stHeader"], [data-testid="stHeader"], .stAppHeader, .stApp > header {
+    /* 1. 상단 헤더, 우측 메뉴, Deploy 버튼 완전 숨기기 */
+    header, header[data-testid="stHeader"], [data-testid="stHeader"], .stAppHeader {
         display: none !important;
         visibility: hidden !important;
         height: 0px !important;
     }
-    
-    /* 2. 우측 상단 툴바, 깃허브 로고/링크, 메뉴 버튼, Deploy 버튼 제거 */
-    [data-testid="stToolbar"], [data-testid="stHeaderActionElements"], #MainMenu, .stActionButton, button[title*="View code"], a[href*="github.com"] {
+    [data-testid="stToolbar"], #MainMenu, .stActionButton, button[title*="View code"], a[href*="github.com"] {
         display: none !important;
         visibility: hidden !important;
     }
 
-    /* 3. 상단 무지개 데코레이션 라인 및 스피너/상태 표시 제거 */
-    [data-testid="stDecoration"], [data-testid="stStatusWidget"] {
-        display: none !important;
-        visibility: hidden !important;
-    }
-
-    /* 4. 하단 푸터, 종이 돛단배 배지(viewerBadge), streamlit.io 링크 제거 */
+    /* 2. 하단 푸터 및 종이 돛단배 로고 배지 완전 숨기기 */
     footer, [data-testid="stFooter"], div[class*="viewerBadge"], [data-testid="stAppViewerFooter"], div[class*="stAppViewerFooter"], a[href*="streamlit.io"] {
         display: none !important;
         visibility: hidden !important;
     }
 
-    /* 5. 상단 여백 보정 */
+    /* 3. 여백 깔끔하게 정돈 */
     .stAppViewContainer > .main, .main .block-container {
         padding-top: 2rem !important;
     }
