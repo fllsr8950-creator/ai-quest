@@ -307,26 +307,50 @@ with tab_main:
         # 확실한 정보/출처 요구 옵션 체크박스
         include_source = st.checkbox("확실하지 않은 정보 추측 방지 및 출처 요구하기", key="chk_include_source")
 
-        length_out = st.selectbox(
+        # 답변 분량 선택 (직접 입력 옵션 추가)
+        length_choice = st.selectbox(
             "답변 분량 / 길이 선택하기",
             [
                 "상세한 설명 (보고서/발표용)",
                 "보통 (1~2문단 분량)",
-                "한 줄 핵심 요약"
+                "한 줄 핵심 요약",
+                "✏️ 직접 입력"
             ],
             key="length_select"
         )
+        
+        if length_choice == "✏️ 직접 입력":
+            custom_length = st.text_input(
+                "원하는 답변 분량을 직접 입력하세요", 
+                placeholder="예) 500자 내외로 상세히 작성", 
+                key="custom_length_input"
+            )
+            length_out = custom_length if custom_length.strip() else "원하는 분량대로 작성"
+        else:
+            length_out = length_choice
 
-        format_out = st.selectbox(
+        # 답변 모양 선택 (직접 입력 옵션 추가)
+        format_choice = st.selectbox(
             "원하는 답변 모양 선택하기", 
             [
                 "1, 2, 3 번호로 핵심만 깔끔 요약",
                 "발표 대본 / 친근한 수다 말투 (~했단다, ~해요)",
                 "한눈에 비교하는 정돈된 표",
-                "학교 수행평가 제출용 깔끔한 줄글 설명문"
+                "학교 수행평가 제출용 깔끔한 줄글 설명문",
+                "✏️ 직접 입력"
             ],
             key="format_select"
         )
+        
+        if format_choice == "✏️ 직접 입력":
+            custom_format = st.text_input(
+                "원하는 답변 모양을 직접 입력하세요", 
+                placeholder="예) 블로그 포스팅 형태 / Q&A 인터뷰 형태", 
+                key="custom_format_input"
+            )
+            format_out = custom_format if custom_format.strip() else "깔끔한 구성"
+        else:
+            format_out = format_choice
 
         role_str = role if role else "전문가"
         topic_str = topic if topic else "[질문할 주제]"
