@@ -3,7 +3,7 @@ import random
 import os
 
 st.set_page_config(
-    page_title="2026CJU 중고생 AI 100% 진짜 활용법",
+    page_title="중고생 AI 100% 활용법",
     page_icon="🤖",
     layout="wide"
 )
@@ -126,30 +126,30 @@ def render_ai_card(name, key, description):
         if filename and os.path.exists(filename):
             st.image(filename, width=img_width)
         else:
-            st.markdown("### 🤖")
+            st.markdown("🤖")
             
     with col_txt:
         st.markdown(f"**{name}**\n\n{description}")
     st.divider()
 
 # ---------------------------------------------------------
-# Header & Subtitle (Self-directed Toolkit Concept)
+# Header & Subtitle
 # ---------------------------------------------------------
-st.markdown("<div class='main-title'>[2026CJU] 중고생을 위한 스마트 AI 활용 툴킷</div>", unsafe_allow_html=True)
-st.markdown("<div class='sub-title'>순서 상관없이! 지금 나에게 필요한 AI 추천과 프롬프트 생성을 자유롭게 이용해 보세요.</div>", unsafe_allow_html=True)
+st.markdown("<div class='main-title'>중고생 AI 100% 활용법</div>", unsafe_allow_html=True)
+st.markdown("<div class='sub-title'>순서 상관없이! 지금 나에게 필요한 AI 추천과 프롬프트를 자유롭게 이용해 보세요.</div>", unsafe_allow_html=True)
 
-# Independent Tool Tabs (No forced stage ordering)
+# Tabs: "내 과제에 맞는 AI 추천", "AI 프롬프트 생성", "💡 AI 실수 찾아보기"
 tab_ai, tab_prompt, tab_fact = st.tabs([
-    "🎯 내 과제에 맞는 AI 추천", 
-    "✍️ AI 프롬프트 생성", 
-    "💡 (선택) AI 팩트체크 / 오류 찾기"
+    "내 과제에 맞는 AI 추천", 
+    "AI 프롬프트 생성", 
+    "💡 AI 실수 찾아보기"
 ])
 
 # ---------------------------------------------------------
 # 1. 내 과제에 맞는 AI 추천
 # ---------------------------------------------------------
 with tab_ai:
-    st.subheader("🎯 내 과제에 맞는 AI 추천")
+    st.subheader("내 과제에 맞는 AI 추천")
     st.info("💡 과제 특성에 맞는 최적의 AI 도구를 고르면 할루시네이션(거짓말) 확률을 낮추고 작업 효율을 최고로 높일 수 있습니다!")
     
     task_type = st.selectbox(
@@ -168,40 +168,40 @@ with tab_ai:
     )
     
     if "🔍" in task_type:
-        st.markdown("### 🏆 추천 AI 도구 목록")
+        st.markdown("### 추천 AI 도구 목록")
         render_ai_card("Perplexity (퍼플렉시티)", "Perplexity", "실시간 웹 검색 연동 및 문장마다 출처(URL)를 직접 달아주어 팩트체크 수고를 90% 줄여줍니다.")
         render_ai_card("Liner AI (라이너)", "Liner", "전문 자료 조사와 학술·웹 출처 검증, 완성된 보고서/자료의 정밀 내용 검토에 특화되어 있습니다.")
         render_ai_card("Google Gemini (제미나이)", "Gemini", "구글 검색 생태계와 결합하여 최신 정보 탐색 및 이미지/문서 분석에 우수합니다.")
 
     elif "📚" in task_type:
-        st.markdown("### 🏆 추천 AI 도구 목록")
+        st.markdown("### 추천 AI 도구 목록")
         render_ai_card("NotebookLM (노트북LM)", "NotebookLM", "내 교과서, 프린트, PDF 자료를 업로드하면 깊이 있는 내용 이해, 마인드맵/시각화 자료 및 오디오 가이드를 제공합니다.")
         render_ai_card("ThetaWaveAI (세타웨이브 AI)", "ThetaWaveAI", "긴 학습 자료를 한눈에 들어오게 요약·정리하고, 시험 대비용 맞춤형 AI 퀴즈를 자동으로 생성해 줍니다.")
         render_ai_card("Univ AI (유니브 AI)", "UnivAI", "교과 및 학술 자료의 체계적 정리와 복습용 실전 퀴즈 생성으로 자기주도 학습을 돕습니다.")
 
     elif "✍️" in task_type:
-        st.markdown("### 🏆 추천 AI 도구 목록")
+        st.markdown("### 추천 AI 도구 목록")
         render_ai_card("Claude (클로드)", "Claude", "방대한 분량의 긴 글과 논문 분석, 자연스러운 보고서 작문 및 논리적 텍스트 생성에 가장 탁월합니다.")
         render_ai_card("ChatGPT (챗GPT)", "ChatGPT", "개념 요약, 아이디어 발상, 독후감 개요 작성 등 만능으로 활용하기 좋은 대표 AI입니다.")
 
     elif "📐" in task_type:
-        st.markdown("### 🏆 추천 AI 도구 목록")
+        st.markdown("### 추천 AI 도구 목록")
         render_ai_card("QANDA (콴다)", "QANDA", "수학 문제 풀이 과정 해설, 오답 원인 분석 및 단계별 문제 해결에 독보적인 수학 전문 AI입니다.")
         render_ai_card("ChatGPT (챗GPT)", "ChatGPT", "수학 공식의 원리와 논리적 풀이 절차를 친절하게 해설해 주는 학습 파트너입니다.")
 
     elif "🎨" in task_type:
-        st.markdown("### 🏆 추천 AI 도구 목록")
+        st.markdown("### 추천 AI 도구 목록")
         render_ai_card("Gamma (감마)", "Gamma", "한 줄 프롬프트나 아이디어만 입력하면 발표용 PPT 슬라이드와 전용 웹 문서를 1분 만에 디자인해 줍니다.")
         render_ai_card("Canva AI (캔바)", "Canva", "카드뉴스, 인포그래픽, 포스터 시각화 디자인 템플릿을 자동으로 완성해 줍니다.")
         render_ai_card("NotebookLM (노트북LM)", "NotebookLM", "내 학습 자료를 기반으로 인포그래픽 개요와 시각화 자료 구상을 구체화해 줍니다.")
 
     elif "🌐" in task_type:
-        st.markdown("### 🏆 추천 AI 도구 목록")
+        st.markdown("### 추천 AI 도구 목록")
         render_ai_card("Claude (클로드)", "Claude", "가장 원어민스럽고 자연스러운 뉘앙스의 영작문 교정 및 긴 원서 독해 해설을 제공합니다.")
         render_ai_card("ChatGPT (챗GPT)", "ChatGPT", "영어 회화 롤플레잉 연습, 문법 오류 수정, 어휘 설명에 우수한 외국어 학습 파트너입니다.")
 
     elif "💻" in task_type:
-        st.markdown("### 🏆 추천 AI 도구 목록")
+        st.markdown("### 추천 AI 도구 목록")
         render_ai_card("Claude (클로드)", "Claude", "복잡한 코드 오류(디버깅) 원인을 친절하게 설명하고 깔끔한 알고리즘 코드를 작성해 줍니다.")
         render_ai_card("ChatGPT (챗GPT)", "ChatGPT", "파이썬, HTML, C언어 등 정보 교과 실습 과제의 기초 코드 작성과 주석 해설에 유용합니다.")
 
@@ -209,7 +209,7 @@ with tab_ai:
         st.markdown("""
         <div class='bridge-box'>
             <h4>💡 AI 도구를 골랐다면?</h4>
-            <p>👉 <b>[✍️ AI 프롬프트 생성] 탭으로 이동하여 AI에게 전달할 맞춤 질문(프롬프트)을 쉽게 만들어 보세요!</b></p>
+            <p>👉 <b>[AI 프롬프트 생성] 탭으로 이동하여 AI에게 전달할 맞춤 질문(프롬프트)을 쉽게 만들어 보세요!</b></p>
         </div>
         """, unsafe_allow_html=True)
 
@@ -217,7 +217,7 @@ with tab_ai:
 # 2. AI 프롬프트 생성
 # ---------------------------------------------------------
 with tab_prompt:
-    st.subheader("✍️ AI 프롬프트 생성")
+    st.subheader("AI 프롬프트 생성")
     st.info("💡 AI에게 확실한 역할, 조건, 답변 모양을 지정해 주면 100점짜리 답변이 나옵니다.")
     
     col1, col2 = st.columns(2)
@@ -242,21 +242,21 @@ with tab_prompt:
         st.text_area("완성된 프롬프트 (복사해서 AI에 그대로 입력하세요):", generated_prompt, height=140)
         
     with col2:
-        st.markdown("#### 2. 최종 제출 전 3단계 팩트체크 체크리스트")
-        chk1 = st.checkbox("1단계: 출처 체크 (숫자, 날짜, 인명을 포털에서 직접 대조해 보았나요?)", key="chk1")
-        chk2 = st.checkbox("2단계: 도구 체크 (과제 성격에 맞는 최적의 AI를 사용하였나요?)", key="chk2")
-        chk3 = st.checkbox("3단계: 내 글로 재구성 (AI 답변을 그대로 복사하지 않고 내 언어로 바꿨나요?)", key="chk3")
+        st.markdown("#### 2. 최종 제출 전 팩트체크 체크리스트")
+        chk1 = st.checkbox("출처 체크 (숫자, 날짜, 인명을 포털에서 직접 대조해 보았나요?)", key="chk1")
+        chk2 = st.checkbox("도구 체크 (과제 성격에 맞는 최적의 AI를 사용하였나요?)", key="chk2")
+        chk3 = st.checkbox("내 글로 재구성 (AI 답변을 그대로 복사하지 않고 내 언어로 바꿨나요?)", key="chk3")
         
         if chk1 and chk2 and chk3:
             st.balloons()
             st.success("축하합니다! AI를 100% 주도적으로 컨트롤하는 스마트 AI 리터러시 마스터 과정을 완수하셨습니다!")
 
 # ---------------------------------------------------------
-# 3. (선택) AI 팩트체크 / 오류 찾기
+# 3. 💡 AI 실수 찾아보기
 # ---------------------------------------------------------
 figures = [
     ("세종대왕", "1446년 훈민정음 반포", "조선 시대"),
-    ("이순신 장군", "1592년 한산도 대첩", "조선 임진왜란"),
+    ("이순신 장군", "1592년 한산도 대첩", "조선 임진외부"),
     ("아인슈타인", "1905년 상대성 이론 발표", "20세기 초"),
     ("레오나르도 다빈치", "1503년 모나리자 제작", "르네상스 시대"),
     ("김구 선생", "1919년 대한민국 임시정부 수립", "일제강점기"),
@@ -305,7 +305,7 @@ def generate_infinite_case():
     }
 
 with tab_fact:
-    st.subheader("💡 (선택) AI 팩트체크 / 오류 찾기")
+    st.subheader("💡 AI 실수 찾아보기")
     st.markdown("""
     > **자율 훈련 공간**: AI가 그럴듯하게 지어낸 가짜 사실을 **'연도 대조/검색'**만으로 적발해 보는 자율 연습실입니다. 궁금할 때 언제든 도전해 보세요!
     """)
