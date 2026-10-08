@@ -237,6 +237,9 @@ with tab_main:
     st.subheader("2. AI 맞춤 질문(프롬프트) 생성기")
     st.info("💡 AI에게 확실한 역할, 조건, 분량, 답변 모양을 지정해 주면 100점짜리 답변이 나옵니다.")
     
+    if 'add_source_prompt' not in st.session_state:
+        st.session_state.add_source_prompt = False
+
     col1, col2 = st.columns(2)
     with col1:
         role = st.text_input(
@@ -276,14 +279,29 @@ with tab_main:
             key="format_select"
         )
         
+        # 원클릭 출처/근거 요청 버튼
+        st.markdown("**💡 꿀팁: 클릭 한 번으로 출처 요구 문구 추가**")
+        btn_col1, btn_col2 = st.columns([2, 1])
+        with btn_col1:
+            if st.button("➕ '참고한 출처나 근거도 함께 알려줘' 추가"):
+                st.session_state.add_source_prompt = True
+                st.rerun()
+        with btn_col2:
+            if st.session_state.add_source_prompt:
+                if st.button("❌ 출처 요청 취소"):
+                    st.session_state.add_source_prompt = False
+                    st.rerun()
+
         role_str = role if role else "전문가"
         topic_str = topic if topic else "[질문할 주제]"
         constraint_str = constraint if constraint else "핵심 위주로 친절하게 설명"
 
+        if st.session_state.add_source_prompt:
+            constraint_str += " (참고한 출처나 근거도 함께 알려주세요)"
+
         generated_prompt = f"당신은 [{role_str}]입니다. [{topic_str}]에 대해 알려주세요.\n\n[약속/조건]: {constraint_str}\n[답변 분량]: {length_out}\n[답변 모양]: {format_out} 형태로 작성해 주세요."
         
         st.text_area("완성된 프롬프트 (복사해서 AI에 그대로 입력하세요):", generated_prompt, height=150)
-        st.caption("💡 **활용 팁**: AI 답변 끝에 *'참고한 출처나 근거도 함께 알려줘'*라고 한 번 더 질문하면 답변의 정확도가 높아집니다!")
         
     with col2:
         st.markdown("#### 3. 최종 제출 전 팩트체크 체크리스트")
