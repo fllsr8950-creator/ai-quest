@@ -8,7 +8,7 @@ st.set_page_config(
     layout="wide"
 )
 
-# Custom Styling (깃허브 로고, 상단바, 하단 돛단배 완전 삭제 CSS)
+# Custom Styling (깃허브 로고, 돛단배, Fullscreen 버튼까지 완벽 삭제)
 st.markdown("""
 <style>
     /* 1. 상단 헤더, 우측 메뉴, Deploy 버튼 완전 숨기기 */
@@ -28,7 +28,17 @@ st.markdown("""
         visibility: hidden !important;
     }
 
-    /* 3. 여백 깔끔하게 정돈 */
+    /* 3. Fullscreen(전체 화면) 버튼 및 이미지 툴바 숨기기 */
+    button[title="View fullscreen"], 
+    button[title="Fullscreen"], 
+    [data-testid="styledFullScreenButton"], 
+    [data-testid="stElementToolbar"], 
+    .stElementToolbar {
+        display: none !important;
+        visibility: hidden !important;
+    }
+
+    /* 4. 여백 깔끔하게 정돈 */
     .stAppViewContainer > .main, .main .block-container {
         padding-top: 2rem !important;
     }
