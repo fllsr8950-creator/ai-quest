@@ -72,12 +72,17 @@ st.markdown("""
         line-height: 1.4 !important;
         font-size: 0.95rem !important;
     }
+
+    /* Reduce horizontal gap in column layout for AI cards */
+    [data-testid="column"] {
+        padding-left: 0.2rem !important;
+        padding-right: 0.2rem !important;
+    }
 </style>
 """, unsafe_allow_html=True)
 
 # ---------------------------------------------------------
 # KakaoTalk Image Mapping & Renderer
-# Swapped Liner (_10.png) and ThetaWaveAI (_08.png)
 # ---------------------------------------------------------
 IMAGE_FILES = {
     "Gemini": "KakaoTalk_20261007_220156149_01.png",
@@ -95,11 +100,11 @@ IMAGE_FILES = {
 
 def render_ai_card(name, key, description):
     filename = IMAGE_FILES.get(key, "")
-    col_img, col_txt = st.columns([1, 5])
+    col_img, col_txt = st.columns([1, 6])
     
     with col_img:
         if filename and os.path.exists(filename):
-            st.image(filename, width=50)
+            st.image(filename, width=65)
         else:
             st.markdown("### 🤖")
             
@@ -140,7 +145,7 @@ tab1, tab2, tab3 = st.tabs([
 ])
 
 # ---------------------------------------------------------
-# 무한 문제 조합 생성기 (완벽 오류 수정)
+# 무한 문제 조합 생성기
 # ---------------------------------------------------------
 figures = [
     ("세종대왕", "1446년 훈민정음 반포", "조선 시대"),
