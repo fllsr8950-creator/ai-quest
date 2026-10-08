@@ -8,11 +8,11 @@ st.set_page_config(
     layout="wide"
 )
 
-# Custom Styling (깃허브 로고, 돛단배, Fullscreen 버튼까지 완벽 삭제)
+# Custom Styling (모든 Streamlit 브랜드, 워터마크, 툴바, Fullscreen 완벽 제거)
 st.markdown("""
 <style>
     /* 1. 상단 헤더, 우측 메뉴, Deploy 버튼 완전 숨기기 */
-    header, header[data-testid="stHeader"], [data-testid="stHeader"], .stAppHeader {
+    header, header[data-testid="stHeader"], [data-testid="stHeader"], .stAppHeader, div[data-testid="stHeader"] {
         display: none !important;
         visibility: hidden !important;
         height: 0px !important;
@@ -22,25 +22,31 @@ st.markdown("""
         visibility: hidden !important;
     }
 
-    /* 2. 하단 푸터 및 종이 돛단배 로고 배지 완전 숨기기 */
-    footer, [data-testid="stFooter"], div[class*="viewerBadge"], [data-testid="stAppViewerFooter"], div[class*="stAppViewerFooter"], a[href*="streamlit.io"] {
+    /* 2. 하단 푸터 및 'Built with Streamlit' 워터마크 완벽 숨기기 */
+    footer, [data-testid="stFooter"], .stAppFooter, div[class*="stAppFooter"], 
+    div[class*="viewerBadge"], [data-testid="stAppViewerFooter"], div[class*="stAppViewerFooter"], 
+    a[href*="streamlit.io"], [data-testid="stStatusWidget"] {
         display: none !important;
         visibility: hidden !important;
+        opacity: 0 !important;
+        height: 0px !important;
     }
 
-    /* 3. Fullscreen(전체 화면) 버튼 및 이미지 툴바 숨기기 */
+    /* 3. Fullscreen (전체 화면 버튼 및 이미지 툴바) 완벽 숨기기 */
     button[title="View fullscreen"], 
     button[title="Fullscreen"], 
     [data-testid="styledFullScreenButton"], 
     [data-testid="stElementToolbar"], 
-    .stElementToolbar {
+    .stElementToolbar,
+    div[data-testid="stElementToolbar"] {
         display: none !important;
         visibility: hidden !important;
+        opacity: 0 !important;
     }
 
-    /* 4. 여백 깔끔하게 정돈 */
+    /* 4. 본문 상단 여백 보정 */
     .stAppViewContainer > .main, .main .block-container {
-        padding-top: 2rem !important;
+        padding-top: 1.5rem !important;
     }
 
     .main-title {
